@@ -1,14 +1,31 @@
-.nav{
-    position:fixed;
-    padding:0px;
-}
-
-.nav ul{
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    height: 100vh;
+  }
+  
+  .nav{
+    position: fixed;
+    padding: 20px;
+    
+  }
+  
+  .nav ul{
     list-style-type: none;
-
-}
-
-.nva li{
-    margin:20px;
-
-}
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav li{
+    display: inline;
+    margin: 50px;
+  }
+  
+  
+  .centered{
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    
+  }
