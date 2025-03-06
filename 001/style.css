@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    padding 0;
     font-family: Arial, sans-serif;
     background-color: #fff;
     height: 100vh;
@@ -19,13 +20,31 @@ body {
   
   .nav li{
     display: inline;
-    margin: 50px;
+    margin: 40px;
   }
   
   
   .centered{
-    position: fixed;
-    top: 30%;
-    left: 50%;
-    
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    text-align: center;
+    height: 70vh;
+    margin: 0;
+  }
+
+  .type_container{
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    text-align: center;
+    height: 0vh;    
+  }
+
+  .type_bar{
+    width: 70%;
+    padding: 15px 24px;    
+    font-size: 16px;
+    border: 1px solid #ccc;
+
   }
