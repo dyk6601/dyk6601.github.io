@@ -1,40 +1,39 @@
-* {
+body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-body{
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #78df8e;
-  height: 100vh;
-}
-
-.nav{
-  position:fixed;
-  width: 100%;
-  background: #f7f0f0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-}
-
-.nav ul{
-  list-style: none;
-  margin: 20px;
-}
-
-.nva li{
-  display: inline;
-  margin: 15px;
-  padding: 10px;
-
-}
-
-
-.class{
-  position:fixed;
-  top:30%;
-
-
-}
+  font-family: Arial, Helvetica;
+  background-color: #fff;
+  min-height: 100vh;
+  }
+  
+  /* nav bar container*/
+  .nav{
+    top : 0;
+    left: 0;
+    width:100%;
+    background-color: #f0dfdf;
+    padding: 10px 20px;
+    z-index: 1000;
+  }
+  
+  /* march 11 I worked on the css for the 001 website*/
+  
+  .nav ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .nav li{
+    margin-right: 20px;
+  }
+  .nav li:last-child {
+    margin-right: 0;
+  }
+  .nav a{
+    text-decoration: none;
+    color:rgb(33, 125, 73)
+  }

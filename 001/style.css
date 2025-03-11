@@ -8,13 +8,9 @@ body {
   
   /* nav bar container*/
   .nav{
-    position: fixed;
-    top : 0;
-    left: 0;
-    width:100%;
+    display:flex;
     background-color: #f0dfdf;
     padding: 10px 20px;
-    z-index: 1000;
   }
   
   .nav ul{
@@ -22,19 +18,20 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    flex-wrap:wrap;
+    align-items: flex-start;
   }
   
   .nav li{
     margin-right: 20px;
   }
-  .nav li:last-child {
-    margin-right: 0;
-  }
+
   .nav a{
     text-decoration: none;
     color:rgb(33, 125, 73)
   }
+
 
   .centered{
     display: flex;

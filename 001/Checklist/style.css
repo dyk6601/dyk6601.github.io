@@ -8,12 +8,9 @@ body {
   
   /* nav bar container*/
   .nav{
-    top : 0;
-    left: 0;
-    width:100%;
+    display:flex;
     background-color: #f0dfdf;
     padding: 10px 20px;
-    z-index: 1000;
   }
   
   .nav ul{
@@ -21,15 +18,15 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    flex-wrap:wrap;
+    align-items: flex-start;
   }
   
   .nav li{
     margin-right: 20px;
   }
-  .nav li:last-child {
-    margin-right: 0;
-  }
+
   .nav a{
     text-decoration: none;
     color:rgb(33, 125, 73)
@@ -39,14 +36,15 @@ body {
 /* Style the overall form container */
 .checklist form {
     max-width: 300px;
-    margin: 20px auto;
+    margin: 70px auto;
     font-family: Arial, sans-serif;
   }
   
   /* Container for the checkboxes */
   .checkbox-container {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     padding-top:70px;
+    box-shadow: 0px 0px 10px 0px;
   }
   
   /* Hide the default checkbox appearance and create a custom one */
@@ -93,7 +91,7 @@ body {
   .submit-container {
     text-align: center;
   }
-  
+  x
   /* Submit button */
   .submit-container input[type="submit"] {
     padding: 8px 12px;

@@ -45,7 +45,8 @@ body {
     }
 
     .login h2{
-        text-align: center;
+        display: flex;
+        justify-content: flex-start;
         margin-top: 0px;
         margin-bottom: 30px;
         font-size: 30px;
