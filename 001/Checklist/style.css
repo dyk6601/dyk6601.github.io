@@ -3,7 +3,6 @@ body {
   padding: 0;
   font-family: Arial, Helvetica;
   background-color: #fff;
-  min-height: 100vh;
   }
   
   /* nav bar container*/
@@ -12,7 +11,7 @@ body {
     background-color: #f0dfdf;
     padding: 10px 20px;
   }
-  
+
   .nav ul{
     list-style-type: none;
     margin: 0;
@@ -33,24 +32,28 @@ body {
   }
 
 
-/* Style the overall form container */
-.checklist form {
-    max-width: 300px;
+  /* Style the overall form container */
+  .checklist form {
+    max-width: 400px;
     margin: 70px auto;
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica;
   }
   
   /* Container for the checkboxes */
   .checkbox-container {
     margin-bottom: 30px;
-    padding-top:70px;
+    padding-top:2px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    border-radius: 10px;
     box-shadow: 0px 0px 10px 0px;
+    max-height: 300px;
+    /* allows scrolling */
+    overflow-y: auto;
   }
   
-  /* Hide the default checkbox appearance and create a custom one */
   .checkbox-container input[type="checkbox"] {
     appearance: none;
-    -webkit-appearance: none;
     width: 20px;
     height: 20px;
     border: 2px solid #ccc;
