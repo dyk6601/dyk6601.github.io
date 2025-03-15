@@ -9,7 +9,7 @@ body {
   .nav{
     display:flex;
     background-color: #f0dfdf;
-    padding: 10px 20px;
+    padding: 10px 0px;
   }
 
   .nav ul{
@@ -17,9 +17,7 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: row;
-    flex-wrap:wrap;
-    align-items: flex-start;
+    justify-content: space-around;
   }
   
   .nav li{
@@ -41,8 +39,6 @@ body {
   
   /* Container for the checkboxes */
   .checkbox-container {
-    margin-bottom: 30px;
-    padding-top:2px;
     padding-left: 20px;
     padding-bottom: 20px;
     border-radius: 10px;
