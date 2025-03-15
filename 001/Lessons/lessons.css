@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica;
+    background-color: #fff;
+    min-height: 100vh;
+    }
+    
+    /* nav bar container*/
+    .nav{
+      display:flex;
+      background-color: #f0dfdf;
+      padding: 10px 20px;
+    }
+    
+    .nav ul{
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      
+    }
+    
+    .nav li{
+      margin-right: 20px;
+    }
+  
+    .nav a{
+      text-decoration: none;
+      color:rgb(33, 125, 73)
+    }
+  
+  
