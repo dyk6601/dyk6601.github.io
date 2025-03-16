@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html>
-<heaed>
-    <title>001 Insight</title>
+<head>
+    <meta charset="utf-8">
+    <title>001 Insights</title>
     <link rel="stylesheet" href="insights.css" />
-</heaed>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+        <script>
+    
+          document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar')
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+              initialView: 'dayGridMonth'
+            })
+            calendar.render()
+          })
+        </script>
+</head>
 <body>
-    <nav class = "nav">
+
+    <nav class="nav">
         <ul>
-          <li><a href =../index.html>Home</a></li>
-          <li><a href =../Lessons/lesson.html>Lesson</a></li>
-          <li><a href= ../Insights/insights.html>Insights</a></li>
-          <li><a href= ../Checklist/checklist.html>Checklist</a></li>
-          <li><a href= ../Login/login.html>Login</a></li>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../Lessons/lesson.html">Lesson</a></li>
+            <li><a href="../Insights/insights.html">Insights</a></li>
+            <li><a href="../Checklist/checklist.html">Checklist</a></li>
+            <li><a href="../Login/login.html">Login</a></li>
         </ul>
     </nav>
-    <div class = "Streak">
+    <h1>Insights</h1>
+    
+    <div class="Streak">
         <h2>Streak</h2>
         <h3>$days</h3>
-        <img src = "blue-blueflame.gif" alt = "blueflame" >
+        <img src="blue-blueflame.gif" alt="blueflame">
     </div>
-
-    <div id="calendar"></div>
-
+    
+    <div id='calendar'></div>
 </body>
-
-
-
-
-
-
-
-
-
-
-
 </html>

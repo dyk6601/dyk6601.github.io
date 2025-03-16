@@ -18,7 +18,7 @@ body {
       margin: 0;
       padding: 0;
       display: flex;
-      
+
     }
     
     .nav li{
@@ -30,4 +30,41 @@ body {
       color:rgb(33, 125, 73)
     }
   
-  
+  .lesson {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+        
+        .lesson-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .lesson-box {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .lesson-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(19, 113, 20, 0.698);
+        }
+        
+        .lesson-box h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        
+        .lesson-box p {
+            color: #666;
+            line-height: 1.5;
+        }
+    

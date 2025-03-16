@@ -19,7 +19,6 @@ body {
       margin: 0;
       padding: 0;
       display: flex;
-      justify-content: space-around;
     }
     
     .nav li{
@@ -32,6 +31,13 @@ body {
       text-decoration: none;
       color:rgb(33, 125, 73)
     }
+
+  h1{
+    font-size: 25px;
+    margin: 10px 10px;
+    font-family: Helvetica;
+    color:rgb(27, 18, 18);
+  }
 
     .Streak{
         margin: 40px auto;
@@ -47,3 +53,32 @@ body {
     .Streak img{
         width: 50px;
     }
+
+    
+#calendar {
+  max-width: 800px;  
+  margin: 20px auto; 
+  height: 500px;     
+
+}
+
+@media screen and (max-width: 768px) {
+  #calendar {
+    max-width: 100%;
+    font-size: 0.9em; 
+    margin: 10px;
+  }
+}
+
+.fc-toolbar-title {
+  font-size: 1.5em !important; 
+}
+
+
+.fc-daygrid-day-frame {
+  padding: 2px !important;
+}
+
+.fc-daygrid-day-number {
+  font-size: 0.9em !important;
+}
