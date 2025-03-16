@@ -3,41 +3,41 @@ body {
   padding: 0;
   font-family: Arial, Helvetica;
   background-color: #fff;
+  min-height: 100vh;
   }
   
   /* nav bar container*/
   .nav{
-    display:flex;
+    display: flex;
     background-color: #f0dfdf;
-    padding: 10px 0px;
+    padding: 10px 20px;
   }
-
+  
   .nav ul{
     list-style-type: none;
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
   }
   
   .nav li{
     margin-right: 20px;
   }
-
   .nav a{
     text-decoration: none;
     color:rgb(33, 125, 73)
   }
 
 
-  /* Style the overall form container */
+  /* the overall form  */
   .checklist form {
     max-width: 400px;
     margin: 70px auto;
     font-family: Arial, Helvetica;
   }
   
-  /* Container for the checkboxes */
+  /* checkboxes */
   .checkbox-container {
     padding-left: 20px;
     padding-bottom: 20px;
@@ -60,7 +60,7 @@ body {
     vertical-align: middle;
   }
   
-  /* Custom checkmark when checkbox is checked */
+  /* checkbox is checked */
   .checkbox-container input[type="checkbox"]:checked {
     background-color: #4CAF50;
     border-color: #4CAF50;
@@ -78,7 +78,7 @@ body {
     transform: rotate(45deg);
   }
   
-  /* Style the labels */
+  /* labels */
   .checkbox-container label {
     font-size: 16px;
     margin-left: 4px;
@@ -86,12 +86,11 @@ body {
     vertical-align: middle;
   }
   
-  /* Container for the submit button */
   .submit-container {
     text-align: center;
   }
-  x
-  /* Submit button */
+  
+  /* submit button */
   .submit-container input[type="submit"] {
     padding: 8px 12px;
     background-color: #4CAF50;
@@ -101,7 +100,7 @@ body {
     cursor: pointer;
   }
   
-  /* Change button color on hover */
+  /* button color on hover */
   .submit-container input[type="submit"]:hover {
     background-color: #45a049;
   }
