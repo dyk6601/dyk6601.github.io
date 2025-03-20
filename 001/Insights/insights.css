@@ -67,6 +67,8 @@ body {
   }
 }
 
+/*sourced from Full Calendar JS */
+
 .fc-toolbar-title {
   font-size: 1.5em !important; 
 }
@@ -79,3 +81,4 @@ body {
 .fc-daygrid-day-number {
   font-size: 0.9em !important;
 }
+/*sourced from Full Calendar JS */
