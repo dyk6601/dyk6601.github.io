@@ -3,22 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>001 checklist</title>
-<link rel="stylesheet" href="check.css" />
-<style>        </style>
+  <link rel="stylesheet" href="./check.css" />
 </head>
 <body>
     <nav class = "nav">
         <ul>
-          <li><a href =../index.html>Home</a></li>
-          <li><a href =../Lessons/lesson.html>Lesson</a></li>
-          <li><a href= ../Insights/insights.html>Insights</a></li>
-          <li><a href= checklist.html>Checklist</a></li>
-          <li><a href= ../Login/login.html>Login</a></li>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../Lessons/lesson.html">Lesson</a></li>
+          <li><a href="../Insights/insights.html">Insights</a></li>
+          <li><a href="./checklist.html">Checklist</a></li>
+          <li><a href="../Login/login.html">Login</a></li>
         </ul>
-      </nav>
-    <nav class="checklist">
-      <form>
-        <div class="checkbox-container">
+    </nav>
+    <div class="checklist-section">
+      <form id = "checklist-form">
+        <div class="checkbox-container" id="checklist-container">
           <h1>Checklist</h1>
           <input type="checkbox" id="check1" name="goal1" value="goal1">
           <label for="check1">Good Food</label><br>
@@ -31,5 +30,23 @@
           </div>
         </div>
       </form>
-    </nav>
+      <button class= "add-button" id="add-button">+</button>
+    </div>
+    <div id="check-popup" class="modal">
+      <div class="modal-content">
+        <div class= "modal-header">
+          <h2>Manage Checklist</h2>
+          <span class="close">&times</span>
+        </div>
+        <div class = "item-list" id = "item-list">
+
+        </div>
+        <div class="add-new-container" id="add-new-container">
+          <input type = "text" id="new-item" placeholder="Enter new thing">
+          <button class="add-new-button" id = "add-new-button">+ Add New Item</button>
+        </div>
+      </div>
+    </div>
+    <script src="./main.js"></script>
 </body>
+</html>

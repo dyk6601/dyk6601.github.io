@@ -29,14 +29,14 @@ body {
     color:rgb(33, 125, 73)
   }
 
-
-  /* the overall form  */
-  .checklist form {
+  .checklist-section {
+    position: relative;
     max-width: 400px;
     margin: 70px auto;
     font-family: Arial, Helvetica;
   }
-  
+
+
   /* checkboxes */
   .checkbox-container {
     padding-left: 20px;
@@ -105,3 +105,121 @@ body {
     background-color: #45a049;
   }
   
+  .add-button {
+    position: absolute;
+    right: -50px;
+    top: 50px;
+    width: 40px;
+    height: 40px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 20%;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .add-button:hover {
+    background-color: #45a049;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .close:hover {
+    color: black;
+  }
+  
+  .item-list {
+    margin-bottom: 20px;
+  }
+
+
+  .item-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+  }
+  .delete-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+   
+  .delete-button:hover {
+    background-color: #d32f2f;
+  }
+  
+  .add-new-container {
+    display: flex;
+    margin-top: 20px;
+  }
+
+  #new-item {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+  }
+  
+  .add-new-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  
+  .add-new-button:hover {
+    background-color: #45a049;
+  }
