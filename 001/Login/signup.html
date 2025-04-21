@@ -5,15 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - 0.01% a day</title>
     <link rel="stylesheet" href="login.css">
+    <style>
+        /* Adding some basic styling for error and success messages */
+        .error-message {
+            color: #ff3333;
+            margin-top: 10px;
+            display: none;
+        }
+        .error-message.success {
+            color: #33cc33;
+        }
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+            color: #0066cc;
+        }
+    </style>
 </head>
 <body>
-    <nav class = "nav">
+    <nav class="nav">
         <ul>
-          <li><a href =../index.html>Home</a></li>
-          <li><a href =../Lessons/lesson.html>Lesson</a></li>
-          <li><a href= ../Insights/insights.html>Insights</a></li>
-          <li><a href= ../Checklist/checklist.html>Checklist</a></li>
-          <li><a href= ../Login/login.html>Login</a></li>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../Lessons/lesson.html">Lesson</a></li>
+          <li><a href="../Insights/insights.html">Insights</a></li>
+          <li><a href="../Checklist/checklist.html">Checklist</a></li>
+          <li><a href="../Login/login.html">Login</a></li>
         </ul>
     </nav>
     <div class="container">
@@ -39,10 +56,14 @@
             <p class="switch-form">Already have an account? <a href="login.html">Login</a></p>
         </div>
     </div>
-
+    
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <!-- Supabase Configuration -->
     <script type="module" src="../js/supabase-config.js"></script>
+    
     <!-- Signup Script -->
     <script type="module" src="signup.js"></script>
 </body>
-</html> 
+</html>
