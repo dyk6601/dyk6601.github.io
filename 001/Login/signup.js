@@ -1,122 +1,68 @@
-// Import Supabase client
+// Import Supabase client from config file
 import { supabaseClient } from '../js/supabase-config.js';
-
-console.log('Signup script loaded');
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM content loaded');
+    // Get form elements
+    const form = document.getElementById('signupForm');
+    const errorMsg = document.getElementById('errorMessage');
+    const loading = document.getElementById('loadingIndicator');
     
-    // DOM Elements
-    const signupForm = document.getElementById('signupForm');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-    const errorMessage = document.getElementById('errorMessage');
-    const loadingIndicator = document.getElementById('loadingIndicator');
-
-    console.log('DOM elements loaded:', {
-        signupForm: !!signupForm,
-        emailInput: !!emailInput,
-        passwordInput: !!passwordInput,
-        confirmPasswordInput: !!confirmPasswordInput,
-        errorMessage: !!errorMessage,
-        loadingIndicator: !!loadingIndicator
-    });
-
-    // Function to show loading state
-    function showLoading() {
-        if (loadingIndicator) {
-            loadingIndicator.style.display = 'block';
+    // Hide loading indicator initially
+    loading.style.display = 'none';
+    
+    // Handle form submission
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Get input values
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('confirmPassword').value.trim();
+        
+        // Simple validation
+        if (!email || !password || !confirmPassword) {
+            showMessage('Please fill in all fields', 'error');
+            return;
         }
-        if (signupForm) {
-            const submitButton = signupForm.querySelector('button[type="submit"]');
-            if (submitButton) {
-                submitButton.disabled = true;
-            }
+        
+        if (password !== confirmPassword) {
+            showMessage('Passwords do not match', 'error');
+            return;
         }
-    }
-
-    // Function to hide loading state
-    function hideLoading() {
-        if (loadingIndicator) {
-            loadingIndicator.style.display = 'none';
-        }
-        if (signupForm) {
-            const submitButton = signupForm.querySelector('button[type="submit"]');
-            if (submitButton) {
-                submitButton.disabled = false;
-            }
-        }
-    }
-
-    // Function to show error message
-    function showError(message, type = 'error') {
-        if (errorMessage) {
-            errorMessage.textContent = message;
-            errorMessage.className = `error-message ${type}`;
-            errorMessage.style.display = 'block';
-        }
-    }
-
-    // Function to hide error message
-    function hideError() {
-        if (errorMessage) {
-            errorMessage.style.display = 'none';
-        }
-    }
-
-    // Function to handle signup
-    async function handleSignup(email, password) {
+        
+        // Show loading and hide error
+        loading.style.display = 'block';
+        errorMsg.style.display = 'none';
+        
         try {
-            showLoading();
-            hideError();
-
-            console.log('Attempting to sign up with:', { email });
-            const { data, error } = await supabaseClient.auth.signUp({
+            // Sign up with Supabase
+            const { data, error } = await supabase.auth.signUp({
                 email: email,
                 password: password,
             });
-
-            if (error) {
-                console.error('Signup error:', error);
-                showError(error.message);
-                return;
-            }
-
-            console.log('Signup successful:', data);
-            showError('Signup successful! Please check your email to verify your account.', 'success');
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 3000);
-        } catch (error) {
-            console.error('Unexpected error during signup:', error);
-            showError('An unexpected error occurred. Please try again.');
-        } finally {
-            hideLoading();
-        }
-    }
-
-    // Add event listeners
-    if (signupForm) {
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
             
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
-            const confirmPassword = confirmPasswordInput.value.trim();
-
-            if (!email || !password || !confirmPassword) {
-                showError('Please fill in all fields');
-                return;
+            if (error) {
+                showMessage(error.message, 'error');
+            } else {
+                showMessage('Signup successful! Check your email to verify.', 'success');
+                // Redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 3000);
             }
-
-            if (password !== confirmPassword) {
-                showError('Passwords do not match');
-                return;
-            }
-
-            await handleSignup(email, password);
-        });
+        } catch (error) {
+            showMessage('Failed to sign up. Please try again.', 'error');
+        }
+        
+        // Hide loading
+        loading.style.display = 'none';
+    });
+    
+    // Helper function to show messages
+    function showMessage(message, type) {
+        errorMsg.textContent = message;
+        errorMsg.className = `error-message ${type}`;
+        errorMsg.style.display = 'block';
     }
 });
