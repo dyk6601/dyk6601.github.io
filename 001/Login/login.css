@@ -1,15 +1,23 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    font-family: Arial, Helvetica;
+    background-color: #fff;
+    min-height: 100vh;
+    display: flex; /* Enable flexbox for the body */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
 }
 
 /* nav bar container*/
 .nav {
-    display: flex;
     background-color: #f0dfdf;
     padding: 10px 20px;
+    position: fixed; /* Stick the nav bar to the top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10; /* Ensure it's above other content */
 }
 
 .nav ul {
@@ -18,7 +26,6 @@ body {
     padding: 0;
     display: flex;
     justify-content: space-between;
-    width: 100%;
 }
 
 .nav li {
@@ -34,22 +41,26 @@ body {
     color: #1a5c2e;
 }
 
-/* Auth Container */
-.auth-container {
-    width: 100%;
-    max-width: 400px;
+.container {
+    /* Removed fixed width and margin auto to allow body flexbox to center */
+    /* width: 100%; */
+    /* max-width: 400px; */
+    /* margin: 50px auto; */
     padding: 20px;
-    margin: 50px auto;
+    text-align: center; /* Center text within the container if needed */
 }
 
-.auth-box {
+.login-box {
     background-color: white;
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Make the login box take full width of the container */
+    max-width: 400px; /* Limit the maximum width of the login box */
+    margin: 0 auto; /* Center the login box within the container */
 }
 
-.auth-box h1 {
+.login-box h1 {
     text-align: center;
     color: #333;
     margin-bottom: 30px;
@@ -81,7 +92,7 @@ body {
     box-shadow: 0 0 5px rgba(33, 125, 73, 0.3);
 }
 
-.auth-button {
+button[type="submit"] {
     width: 100%;
     padding: 12px;
     background-color: rgb(33, 125, 73);
@@ -93,23 +104,35 @@ body {
     transition: background-color 0.3s;
 }
 
-.auth-button:hover {
+button[type="submit"]:hover {
     background-color: #1a5c2e;
 }
 
-.auth-link {
+.signup-link {
     text-align: center;
     margin-top: 20px;
     color: #666;
 }
 
-.auth-link a {
+.signup-link a {
     color: rgb(33, 125, 73);
     text-decoration: none;
     font-weight: bold;
 }
 
-.auth-link a:hover {
+.signup-link a:hover {
     text-decoration: underline;
     color: #1a5c2e;
-} 
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.loading-indicator {
+    color: green;
+    margin-bottom: 10px;
+    text-align: center;
+}
