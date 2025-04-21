@@ -34,8 +34,8 @@ function hideError() {
 
 // Function to validate password
 function validatePassword(password, confirmPassword) {
-    if (password.length < 6) {
-        return 'Password must be at least 6 characters long';
+    if (password.length < 4) {
+        return 'Password must be at least 4 characters long';
     }
     if (password !== confirmPassword) {
         return 'Passwords do not match';
