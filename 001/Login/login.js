@@ -1,3 +1,6 @@
+// Import Supabase client
+import { supabaseClient } from '../js/supabase-config.js';
+
 // DOM Elements
 const loginForm = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
@@ -43,17 +46,23 @@ async function handleLogin(email, password) {
         showLoading();
         hideError();
 
-        const { data, error } = await supabase.auth.signInWithPassword({
+        // Attempt to login
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
             email: email,
-            password: password
+            password: password,
         });
 
-        if (error) throw error;
+        if (error) {
+            console.error('Login error:', error);
+            showError(error.message);
+            return;
+        }
 
+        console.log('Login successful:', data);
         handleSuccessfulLogin();
     } catch (error) {
-        console.error('Login error:', error);
-        showError(error.message || 'Failed to login. Please check your credentials.');
+        console.error('Unexpected error during login:', error);
+        showError('An unexpected error occurred. Please try again.');
     } finally {
         hideLoading();
     }
