@@ -44,11 +44,17 @@ function handleSuccessfulLogin() {
 // Function to check login status on page load
 async function checkLoginStatus() {
     try {
+        console.log('Checking login status...');
         const { data: { session }, error } = await supabaseClient.auth.getSession();
+        if (error) {
+            console.error('Error checking session:', error);
+            return;
+        }
         if (session) {
             console.log('User is logged in:', session.user.email);
-            // Redirect to dashboard or home page
             window.location.href = '../index.html';
+        } else {
+            console.log('No active session found');
         }
     } catch (error) {
         console.error('Error checking login status:', error);
@@ -61,8 +67,7 @@ async function handleLogin(email, password) {
         showLoading();
         hideError();
 
-        // Attempt to login
-        console.log('Attempting to login with:', { email, password });
+        console.log('Attempting to login with:', { email });
         const { data, error } = await supabaseClient.auth.signInWithPassword({
             email: email,
             password: password,
@@ -75,9 +80,7 @@ async function handleLogin(email, password) {
         }
 
         console.log('Login successful:', data);
-        // Show success message
         showError('Login successful! Redirecting...', 'success');
-        // Redirect to dashboard or home page after a short delay
         setTimeout(() => {
             window.location.href = '../index.html';
         }, 1500);

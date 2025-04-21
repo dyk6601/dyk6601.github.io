@@ -22,8 +22,9 @@ function hideLoading() {
 }
 
 // Function to show error message
-function showError(message) {
+function showError(message, type = 'error') {
     errorMessage.textContent = message;
+    errorMessage.className = `error-message ${type}`;
     errorMessage.style.display = 'block';
 }
 
@@ -52,36 +53,29 @@ function validateEmail(email) {
     return null;
 }
 
-// Function to handle successful signup
-function handleSuccessfulSignup() {
-    // Redirect to login page
-    window.location.href = 'login.html';
-}
-
 // Function to handle signup
 async function handleSignup(email, password) {
     try {
         showLoading();
         hideError();
 
-        console.log('Attempting to sign up with:', { email, password });
+        console.log('Attempting to sign up with:', { email });
         const { data, error } = await supabaseClient.auth.signUp({
             email: email,
             password: password,
-            options: {
-                emailRedirectTo: window.location.origin + '/Login/login.html'
-            }
         });
 
         if (error) {
             console.error('Signup error:', error);
-            showError(error.message || 'Failed to sign up. Please try again.');
+            showError(error.message);
             return;
         }
 
         console.log('Signup successful:', data);
-        alert('Signup successful! Please check your email to verify your account.');
-        handleSuccessfulSignup();
+        showError('Signup successful! Please check your email to verify your account.', 'success');
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 3000);
     } catch (error) {
         console.error('Unexpected error during signup:', error);
         showError('An unexpected error occurred. Please try again.');
@@ -98,16 +92,13 @@ signupForm.addEventListener('submit', async (e) => {
     const password = passwordInput.value.trim();
     const confirmPassword = confirmPasswordInput.value.trim();
 
-    // Validate inputs
-    const emailError = validateEmail(email);
-    if (emailError) {
-        showError(emailError);
+    if (!email || !password || !confirmPassword) {
+        showError('Please fill in all fields');
         return;
     }
 
-    const passwordError = validatePassword(password, confirmPassword);
-    if (passwordError) {
-        showError(passwordError);
+    if (password !== confirmPassword) {
+        showError('Passwords do not match');
         return;
     }
 
