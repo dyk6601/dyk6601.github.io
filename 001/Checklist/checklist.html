@@ -1,52 +1,51 @@
-<!DOCTYPE html> 
-<html lang=en>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>001 checklist</title>
-  <link rel="stylesheet" href="./check.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist - 0.01% a day</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="check.css">
 </head>
 <body>
-    <nav class = "nav">
+    <header>
+        <nav>
+            <div id="auth-link">
+                <!-- This will be updated by the auth-check.js script -->
+                <a href="../Login/login.html">Login</a>
+            </div>
+        </nav>
+    </header>
+    <nav class="nav">
         <ul>
-          <li><a href="../index.html">Home</a></li>
-          <li><a href="../Lessons/lesson.html">Lesson</a></li>
-          <li><a href="../Insights/insights.html">Insights</a></li>
-          <li><a href="./checklist.html">Checklist</a></li>
-          <li><a href="../Login/login.html">Login</a></li>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../Lessons/lesson.html">Lesson</a></li>
+            <li><a href="../Insights/insights.html">Insights</a></li>
+            <li><a href="checklist.html">Checklist</a></li>
         </ul>
     </nav>
-    <div class="checklist-section">
-      <form id = "checklist-form">
-        <div class="checkbox-container" id="checklist-container">
-          <h1>Checklist</h1>
-          <input type="checkbox" id="check1" name="goal1" value="goal1">
-          <label for="check1">Good Food</label><br>
-          <input type="checkbox" id="check2" name="goal2" value="goal2">
-          <label for="check2">Exercise</label><br>
-          <input type="checkbox" id="check3" name="goal3" value="goal3">
-          <label for="check3">8 hour Sleep</label><br>
-          <div class="submit-container">
-            <input type="submit" value="Submit">
-          </div>
-        </div>
-      </form>
-      <button class= "add-button" id="add-button">+</button>
-    </div>
-    <div id="check-popup" class="modal">
-      <div class="modal-content">
-        <div class= "modal-header">
-          <h2>Manage Checklist</h2>
-          <span class="close">&times</span>
-        </div>
-        <div class = "item-list" id = "item-list">
 
-        </div>
-        <div class="add-new-container" id="add-new-container">
-          <input type = "text" id="new-item" placeholder="Enter new thing">
-          <button class="add-new-button" id = "add-new-button">+ Add New Item</button>
-        </div>
-      </div>
+    <div class="container">
+        <h1>Daily Checklist</h1>
+        <form id="checklistForm">
+            <div class="input-group">
+                <input type="text" id="newItem" placeholder="Add a new item...">
+                <button type="button" id="addItemBtn">Add</button>
+            </div>
+            <div id="checklistItems" class="checklist-items">
+                <!-- Checklist items will be added here dynamically -->
+            </div>
+        </form>
     </div>
-    <script src="./main.js"></script>
+
+    <!-- Supabase Configuration -->
+    <script type="module" src="../js/supabase-config.js"></script>
+    <!-- Auth Check Script -->
+    <script type="module">
+        import { checkAuthStatus } from '../js/auth-check.js';
+        document.addEventListener('DOMContentLoaded', checkAuthStatus);
+    </script>
+    <!-- Checklist Script -->
+    <script type="module" src="main.js"></script>
 </body>
 </html>

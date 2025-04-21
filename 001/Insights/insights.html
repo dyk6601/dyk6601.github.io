@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>001 Insights</title>
-    <link rel="stylesheet" href="insights.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insights - 0.01% a day</title>
+    <link rel="stylesheet" href="../css/styles.css">
     <!-- sourced from Full Calendar JS-->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
         <script>
@@ -19,14 +20,20 @@
       <!-- sourced from Full Calendar JS-->
 </head>
 <body>
-
+    <header>
+        <nav>
+            <div id="auth-link">
+                <!-- This will be updated by the auth-check.js script -->
+                <a href="../Login/login.html">Login</a>
+            </div>
+        </nav>
+    </header>
     <nav class="nav">
         <ul>
             <li><a href="../index.html">Home</a></li>
             <li><a href="../Lessons/lesson.html">Lesson</a></li>
-            <li><a href="../Insights/insights.html">Insights</a></li>
+            <li><a href="insights.html">Insights</a></li>
             <li><a href="../Checklist/checklist.html">Checklist</a></li>
-            <li><a href="../Login/login.html">Login</a></li>
         </ul>
     </nav>
     <h1>Insights</h1>
@@ -38,5 +45,13 @@
     </div>
     
     <div id='calendar'></div>
+
+    <!-- Supabase Configuration -->
+    <script type="module" src="../js/supabase-config.js"></script>
+    <!-- Auth Check Script -->
+    <script type="module">
+        import { checkAuthStatus } from '../js/auth-check.js';
+        document.addEventListener('DOMContentLoaded', checkAuthStatus);
+    </script>
 </body>
 </html>
