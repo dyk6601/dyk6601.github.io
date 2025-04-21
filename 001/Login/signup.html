@@ -3,16 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - 0.01% a day</title>
+    <title>Sign Up - 0.01% a day</title>
     <link rel="stylesheet" href="login.css">
     <!-- Supabase SDK -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
+    <nav class = "nav">
+        <ul>
+          <li><a href =../index.html>Home</a></li>
+          <li><a href =../Lessons/lesson.html>Lesson</a></li>
+          <li><a href= ../Insights/insights.html>Insights</a></li>
+          <li><a href= ../Checklist/checklist.html>Checklist</a></li>
+          <li><a href= ../Login/login.html>Login</a></li>
+        </ul>
+    </nav>
     <div class="container">
         <div class="login-box">
-            <h1>Login</h1>
-            <form id="loginForm">
+            <h1>Sign Up</h1>
+            <form id="signupForm">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
@@ -21,20 +30,21 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
                 <div id="errorMessage" class="error-message" style="display: none;"></div>
                 <div id="loadingIndicator" class="loading-indicator" style="display: none;">Loading...</div>
-                <button type="submit">Login</button>
+                <button type="submit">Sign Up</button>
             </form>
-            <p class="signup-link">Don't have an account? <a href="signup.html">Sign up</a></p>
+            <p class="signup-link">Already have an account? <a href="login.html">Login</a></p>
         </div>
     </div>
 
     <!-- Supabase Configuration -->
     <script src="../js/supabase-config.js"></script>
-    <!-- Login Script -->
-    <script src="login.js"></script>
+    <!-- Signup Script -->
+    <script src="signup.js"></script>
 </body>
-</html>
-
-
-
+</html> 

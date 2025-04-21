@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>001</title>
-<link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Supabase SDK -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <nav class = "nav">
@@ -21,7 +23,52 @@
 <div class = "type_container">
   <input type = "text" class = "type_bar" placeholder= "Feel free to write anything">
 </div>
+<div class="lesson-form">
+  <h2>Add a New Lesson</h2>
+  <form id="lessonForm">
+    <div class="form-group">
+      <label for="lessonTitle">Lesson Title:</label>
+      <input type="text" id="lessonTitle" name="lessonTitle" required>
+    </div>
+    <div class="form-group">
+      <label for="lessonContent">Lesson Content:</label>
+      <textarea id="lessonContent" name="lessonContent" required></textarea>
+    </div>
+    <button type="submit" id="submitButton">Add Lesson</button>
+    <div id="loadingIndicator" style="display: none;">Loading...</div>
+  </form>
+</div>
+<div class="lesson-container">
+  <div id="loadingLessons" style="display: none;">Loading lessons...</div>
+  <!-- Lessons will be loaded here -->
+</div>
+
+<!-- Edit Lesson Modal -->
+<div id="editModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Edit Lesson</h2>
+    <form id="editLessonForm">
+      <input type="hidden" id="editLessonId">
+      <div class="form-group">
+        <label for="editLessonTitle">Lesson Title:</label>
+        <input type="text" id="editLessonTitle" required>
+      </div>
+      <div class="form-group">
+        <label for="editLessonContent">Lesson Content:</label>
+        <textarea id="editLessonContent" required></textarea>
+      </div>
+      <button type="submit">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<!-- Supabase Configuration -->
+<script src="js/supabase-config.js"></script>
+<!-- Database Operations -->
+<script src="js/database.js"></script>
 </body>
+</html>
 
 
 
