@@ -24,15 +24,14 @@
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <ul>
-          <li><a href="../index.html">Home</a></li>
-          <li><a href="../Lessons/lesson.html">Lesson</a></li>
-          <li><a href="../Insights/insights.html">Insights</a></li>
-          <li><a href="../Checklist/checklist.html">Checklist</a></li>
-          <li><a href="../Login/login.html">Login</a></li>
-        </ul>
-    </nav>
+    <header>
+        <nav>
+            <div id="auth-link">
+                <!-- This will be updated by the auth-check.js script -->
+                <a href="../Login/login.html">Login</a>
+            </div>
+        </nav>
+    </header>
     <div class="container">
         <div class="login-box">
             <h1>Sign Up</h1>
@@ -62,6 +61,12 @@
     
     <!-- Supabase Configuration -->
     <script type="module" src="../js/supabase-config.js"></script>
+    
+    <!-- Auth Check Script -->
+    <script type="module">
+        import { checkAuthStatus } from '../js/auth-check.js';
+        document.addEventListener('DOMContentLoaded', checkAuthStatus);
+    </script>
     
     <!-- Signup Script -->
     <script type="module" src="signup.js"></script>
