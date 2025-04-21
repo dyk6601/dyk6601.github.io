@@ -52,7 +52,7 @@ const supabaseClient = createClient(
                 email: email,
                 password: password,
                 options: {
-                    emailRedirectTo: window.location.origin + '/Login/login.html'
+                    emailRedirectTo: 'https://dyk6601.github.io/Login/login.html'
                 }
             });
             
