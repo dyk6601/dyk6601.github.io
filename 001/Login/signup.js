@@ -64,6 +64,7 @@ async function handleSignup(email, password) {
         showLoading();
         hideError();
 
+        console.log('Attempting to sign up with:', { email, password });
         const { data, error } = await supabaseClient.auth.signUp({
             email: email,
             password: password,
@@ -72,15 +73,18 @@ async function handleSignup(email, password) {
             }
         });
 
-        if (error) throw error;
-
-        if (data.user) {
-            alert('Signup successful! Please check your email to verify your account.');
-            handleSuccessfulSignup();
+        if (error) {
+            console.error('Signup error:', error);
+            showError(error.message || 'Failed to sign up. Please try again.');
+            return;
         }
+
+        console.log('Signup successful:', data);
+        alert('Signup successful! Please check your email to verify your account.');
+        handleSuccessfulSignup();
     } catch (error) {
-        console.error('Signup error:', error);
-        showError(error.message || 'Failed to sign up. Please try again.');
+        console.error('Unexpected error during signup:', error);
+        showError('An unexpected error occurred. Please try again.');
     } finally {
         hideLoading();
     }
