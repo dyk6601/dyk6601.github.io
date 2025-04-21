@@ -21,8 +21,9 @@ function hideLoading() {
 }
 
 // Function to show error message
-function showError(message) {
+function showError(message, type = 'error') {
     errorMessage.textContent = message;
+    errorMessage.className = `error-message ${type}`;
     errorMessage.style.display = 'block';
 }
 
@@ -40,6 +41,20 @@ function handleSuccessfulLogin() {
     window.location.href = '../index.html';
 }
 
+// Function to check login status on page load
+async function checkLoginStatus() {
+    try {
+        const { data: { session }, error } = await supabaseClient.auth.getSession();
+        if (session) {
+            console.log('User is logged in:', session.user.email);
+            // Redirect to dashboard or home page
+            window.location.href = '../index.html';
+        }
+    } catch (error) {
+        console.error('Error checking login status:', error);
+    }
+}
+
 // Function to handle login
 async function handleLogin(email, password) {
     try {
@@ -47,6 +62,7 @@ async function handleLogin(email, password) {
         hideError();
 
         // Attempt to login
+        console.log('Attempting to login with:', { email, password });
         const { data, error } = await supabaseClient.auth.signInWithPassword({
             email: email,
             password: password,
@@ -59,7 +75,12 @@ async function handleLogin(email, password) {
         }
 
         console.log('Login successful:', data);
-        handleSuccessfulLogin();
+        // Show success message
+        showError('Login successful! Redirecting...', 'success');
+        // Redirect to dashboard or home page after a short delay
+        setTimeout(() => {
+            window.location.href = '../index.html';
+        }, 1500);
     } catch (error) {
         console.error('Unexpected error during login:', error);
         showError('An unexpected error occurred. Please try again.');
@@ -93,6 +114,9 @@ loginForm.addEventListener('submit', async (e) => {
 
 // Check auth status when page loads
 document.addEventListener('DOMContentLoaded', checkAuthStatus);
+
+// Check login status on page load
+document.addEventListener('DOMContentLoaded', checkLoginStatus);
 
 // Add event listeners for input validation
 emailInput.addEventListener('input', () => {

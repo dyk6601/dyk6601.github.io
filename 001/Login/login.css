@@ -126,9 +126,17 @@ button[type="submit"]:hover {
 }
 
 .error-message {
-    color: red;
-    margin-bottom: 10px;
-    text-align: center;
+    color: #ff4444;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #ffebee;
+    display: none;
+}
+
+.error-message.success {
+    color: #00C851;
+    background-color: #e8f5e9;
 }
 
 .loading-indicator {
