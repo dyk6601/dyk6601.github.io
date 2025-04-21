@@ -1,12 +1,22 @@
 // Import Supabase client
 import { supabaseClient } from '../js/supabase-config.js';
 
+console.log('Login script loaded');
+
 // DOM Elements
 const loginForm = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const errorMessage = document.getElementById('errorMessage');
 const loadingIndicator = document.getElementById('loadingIndicator');
+
+console.log('DOM elements loaded:', {
+    loginForm: !!loginForm,
+    emailInput: !!emailInput,
+    passwordInput: !!passwordInput,
+    errorMessage: !!errorMessage,
+    loadingIndicator: !!loadingIndicator
+});
 
 // Function to show loading state
 function showLoading() {
