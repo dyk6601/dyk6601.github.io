@@ -1,3 +1,6 @@
+// Import Supabase client
+import { supabaseClient } from '../js/supabase-config.js';
+
 // DOM Elements
 const signupForm = document.getElementById('signupForm');
 const emailInput = document.getElementById('email');
@@ -61,7 +64,7 @@ async function handleSignup(email, password) {
         showLoading();
         hideError();
 
-        const { data, error } = await supabase.auth.signUp({
+        const { data, error } = await supabaseClient.auth.signUp({
             email: email,
             password: password,
             options: {
