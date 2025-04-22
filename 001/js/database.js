@@ -8,6 +8,7 @@ const loadingIndicator = document.getElementById('loadingIndicator');
 const loadingLessons = document.getElementById('loadingLessons');
 const editModal = document.getElementById('editModal');
 const editLessonForm = document.getElementById('editLessonForm');
+const deleteLessonForm = document.getElementById('deleteLessonForm');
 const closeModal = document.querySelector('.close');
 
 // Function to show loading state
