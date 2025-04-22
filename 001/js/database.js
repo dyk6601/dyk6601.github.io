@@ -1,3 +1,6 @@
+import { supabaseClient as supabase } from '../js/supabase-config.js';
+
+
 // Database operations
 const lessonForm = document.getElementById('lessonForm');
 const submitButton = document.getElementById('submitButton');
