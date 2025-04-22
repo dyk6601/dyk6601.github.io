@@ -1,78 +1,75 @@
 body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, Helvetica;
-    background-color: #fff;
-    min-height: 100vh;
-    }
-    
-    /* nav bar container*/
-    .nav{
-      display: flex;
-      background-color: #f0dfdf;
-      padding: 10px 20px;
-    }
-    
-    .nav ul{
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: space-between;
-    }
-    
-    .nav li{
-      margin-right: 20px;
-    }
-    .nav a{
-      text-decoration: none;
-      color:rgb(33, 125, 73)
-    }
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fff;
+  min-height: 100vh;
+}
 
-  h1{
-    font-size: 25px;
-    margin: 10px 10px;
-    font-family: Helvetica;
-    color:rgb(27, 18, 18);
-  }
+.nav {
+  display: flex;
+  background-color: #f0dfdf;
+  padding: 10px 20px;
+}
 
-    .Streak{
-        margin: 40px auto;
-        background-image: linear-gradient(to bottom right, rgb(249, 22, 22), rgb(232, 175, 68));
-        width: 40%;
-        padding:30px;
-        box-shadow: 0px 0px 10px 0px;
-        border-radius: 10px;
-    }
-    .Streak h2{
-        align-items: center;
-    }
-    .Streak img{
-        width: 50px;
-    }
+.nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+}
 
-    
+.nav a {
+  text-decoration: none;
+  color: rgb(33, 125, 73);
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 32px;
+  margin: 20px;
+  color: #1b1212;
+}
+
+.Streak {
+  margin: 40px auto;
+  background: linear-gradient(to bottom right, rgb(249, 22, 22), rgb(232, 175, 68));
+  width: 90%;
+  max-width: 500px;
+  padding: 30px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  text-align: center;
+  color: #fff;
+}
+
+.Streak img {
+  width: 50px;
+  margin-top: 10px;
+}
+
 #calendar {
-  max-width: 800px;  
-  margin: 20px auto; 
-  height: 500px;     
-
+  max-width: 90%;
+  margin: 40px auto;
+  height: 500px;
+  background-color: #fafafa;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
 }
 
 @media screen and (max-width: 768px) {
   #calendar {
     max-width: 100%;
-    font-size: 0.9em; 
+    font-size: 0.9em;
     margin: 10px;
   }
 }
 
-/*sourced from Full Calendar JS */
-
 .fc-toolbar-title {
-  font-size: 1.5em !important; 
+  font-size: 1.5em !important;
 }
-
 
 .fc-daygrid-day-frame {
   padding: 2px !important;
@@ -81,4 +78,3 @@ body {
 .fc-daygrid-day-number {
   font-size: 0.9em !important;
 }
-/*sourced from Full Calendar JS */
