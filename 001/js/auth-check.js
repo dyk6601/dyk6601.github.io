@@ -18,7 +18,7 @@ async function checkAuthStatus() {
         console.error('Error checking auth status:', error);
         // Default to login link if there's an error
         const authLink = document.getElementById("auth-link");
-        authLink.innerHTML = '<a href="../Login/login.html">Login</a>';
+        authLink.innerHTML = '<a href="../001/login.html">Login</a>';
     }
 }
 
