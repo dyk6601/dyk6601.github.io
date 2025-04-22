@@ -186,13 +186,15 @@ lessonForm.addEventListener('submit', async (e) => {
 });
 
 // Event listener for edit form submission
-editLessonForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('editLessonId').value;
-    const title = document.getElementById('editLessonTitle').value;
-    const content = document.getElementById('editLessonContent').value;
-    await editLesson(id, title, content);
-});
-
+if (editLessonForm) {
+    editLessonForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('editLessonId').value;
+        const title = document.getElementById('editLessonTitle').value;
+        const content = document.getElementById('editLessonContent').value;
+        await editLesson(id, title, content);
+    });
+}
 // Load lessons when the page loads
 document.addEventListener('DOMContentLoaded', loadLessons); 
+
