@@ -72,25 +72,24 @@ async function addLesson(title, content) {
 }
 
 // Function to edit a lesson
-if (editLessonForm){
 async function editLesson(id, title, content) {
     try {
-        const { error } = await supabase
-            .from('lessons')
-            .update({ title, content })
-            .eq('id', id);
-
-        if (error) throw error;
-        
-        alert('Lesson updated successfully!');
-        hideModal();
-        await loadLessons();
+      const { error } = await supabase
+        .from('lessons')
+        .update({ title, content })
+        .eq('id', id);
+  
+      if (error) throw error;
+  
+      alert('Lesson updated successfully!');
+      hideModal();
+      await loadLessons();
     } catch (error) {
-        console.error('Error updating lesson: ', error);
-        alert('Error updating lesson. Please try again.');
+      console.error('Error updating lesson: ', error);
+      alert('Error updating lesson. Please try again.');
     }
-}
-}
+  }
+  
 
 // Function to delete a lesson
 if (deleteLessonForm) {
