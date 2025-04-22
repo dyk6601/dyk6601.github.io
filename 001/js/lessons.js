@@ -1,4 +1,4 @@
-import { supabaseClient as supabase } from './supabase-config.js';
+import { supabaseClient as supabase } from '../js/supabase-config.js';
 
 
 // Database operations
@@ -18,9 +18,7 @@ function showLoading(element) {
 
 // Function to hide loading state
 function hideLoading(element) {
-    if (element) {  // Check if element exists
-        element.style.display = 'none';
-    }
+    element.style.display = 'none';
 }
 
 // Function to show modal
