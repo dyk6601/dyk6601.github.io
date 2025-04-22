@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Lessons - 0.01% a day</title>
-    <link rel="stylesheet" href="lessons.css">
+    <link rel="stylesheet" href="lessons.css" />
 </head>
 <body>
     <nav class="nav">
@@ -13,158 +13,64 @@
             <li><a href="lesson.html">Lesson</a></li>
             <li><a href="../Insights/insights.html">Insights</a></li>
             <li><a href="../Checklist/checklist.html">Checklist</a></li>
-            <li><div id="auth-link">
-                <!-- This will be updated by the auth-check.js script -->
-                <a href="../Login/login.html">Login</a>
-            </div></li>
+            <li>
+                <div id="auth-link">
+                    <a href="../Login/login.html">Login</a>
+                </div>
+            </li>
         </ul>
     </nav>
+
     <div class="lesson">
         <h1>Lessons</h1>
-        <div class="lesson-container" id="lessonContainer">
+
+        <!-- Form to add new lesson -->
+        <form id="lessonForm">
+            <input type="text" id="lessonTitle" placeholder="Lesson Title" required />
+            <textarea id="lessonContent" placeholder="Lesson Content" required></textarea>
+            <button type="submit" id="submitButton">Add Lesson</button>
+        </form>
+        <div id="loadingIndicator" style="display:none;">Adding lesson...</div>
+
+        <!-- Container for lessons -->
+        <div id="loadingLessons" style="display:none;">Loading lessons...</div>
+        <div class="lesson-container">
             <!-- Lessons will be dynamically added here -->
         </div>
     </div>
 
-    <!-- Lesson Modal -->
-    <div id="lessonModal" class="modal">
+    <!-- Modal for editing a lesson -->
+    <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <div class="modal-header">
-                <h2 id="modalTitle"></h2>
-                <button class="delete-lesson-btn" id="deleteLessonBtn">Delete</button>
-            </div>
             <form id="editLessonForm">
+                <input type="hidden" id="editLessonId" />
                 <div class="form-group">
-                    <label for="editTitle">Title:</label>
-                    <input type="text" id="editTitle" required>
+                    <label for="editLessonTitle">Title:</label>
+                    <input type="text" id="editLessonTitle" required />
                 </div>
                 <div class="form-group">
-                    <label for="editContent">Content:</label>
-                    <textarea id="editContent" required></textarea>
+                    <label for="editLessonContent">Content:</label>
+                    <textarea id="editLessonContent" required></textarea>
                 </div>
-                <input type="hidden" id="editIndex">
                 <button type="submit">Save Changes</button>
+            </form>
+            <form id="deleteLessonForm">
+                <button type="button" id="deleteLessonButton">Delete</button>
             </form>
         </div>
     </div>
 
     <!-- Supabase Configuration -->
     <script type="module" src="../js/supabase-config.js"></script>
-    <!-- Auth Check Script -->
+
+    <!-- Auth Check -->
     <script type="module">
         import { checkAuthStatus } from '../js/auth-check.js';
         document.addEventListener('DOMContentLoaded', checkAuthStatus);
     </script>
 
-    <script>
-        // Function to display lessons
-        function displayLessons() {
-            const lessonContainer = document.getElementById('lessonContainer');
-            const lessons = JSON.parse(localStorage.getItem('lessons')) || [];
-            
-            lessonContainer.innerHTML = ''; // Clear existing content
-            
-            if (lessons.length === 0) {
-                lessonContainer.innerHTML = '<p>No lessons added yet.</p>';
-                return;
-            }
-            
-            lessons.forEach((lesson, index) => {
-                const lessonBox = document.createElement('div');
-                lessonBox.className = 'lesson-box';
-                lessonBox.dataset.index = index;
-                
-                const title = document.createElement('h2');
-                title.textContent = lesson.title;
-                
-                const content = document.createElement('p');
-                content.textContent = lesson.content;
-                
-                const date = document.createElement('p');
-                date.className = 'lesson-date';
-                date.textContent = new Date(lesson.date).toLocaleDateString();
-                
-                lessonBox.appendChild(title);
-                lessonBox.appendChild(content);
-                lessonBox.appendChild(date);
-                
-                // Make the lesson box clickable
-                lessonBox.onclick = () => openLessonModal(index);
-                
-                lessonContainer.appendChild(lessonBox);
-            });
-        }
-
-        // Function to delete a lesson
-        function deleteLesson(index) {
-            if (confirm('Are you sure you want to delete this lesson?')) {
-                const lessons = JSON.parse(localStorage.getItem('lessons')) || [];
-                lessons.splice(index, 1);
-                localStorage.setItem('lessons', JSON.stringify(lessons));
-                displayLessons();
-                closeModal();
-            }
-        }
-
-        // Modal functionality
-        const modal = document.getElementById('lessonModal');
-        const closeBtn = document.getElementsByClassName('close')[0];
-        const editForm = document.getElementById('editLessonForm');
-        const deleteBtn = document.getElementById('deleteLessonBtn');
-        const modalTitle = document.getElementById('modalTitle');
-
-        function openLessonModal(index) {
-            const lessons = JSON.parse(localStorage.getItem('lessons')) || [];
-            const lesson = lessons[index];
-            
-            modalTitle.textContent = lesson.title;
-            document.getElementById('editTitle').value = lesson.title;
-            document.getElementById('editContent').value = lesson.content;
-            document.getElementById('editIndex').value = index;
-            
-            // Set up delete button
-            deleteBtn.onclick = (e) => {
-                e.stopPropagation(); // Prevent modal from closing
-                deleteLesson(index);
-            };
-            
-            modal.style.display = 'block';
-        }
-
-        function closeModal() {
-            modal.style.display = 'none';
-        }
-
-        closeBtn.onclick = closeModal;
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-
-        editForm.onsubmit = function(e) {
-            e.preventDefault();
-            
-            const index = document.getElementById('editIndex').value;
-            const title = document.getElementById('editTitle').value;
-            const content = document.getElementById('editContent').value;
-            
-            const lessons = JSON.parse(localStorage.getItem('lessons')) || [];
-            lessons[index] = {
-                title: title,
-                content: content,
-                date: lessons[index].date // Keep original date
-            };
-            
-            localStorage.setItem('lessons', JSON.stringify(lessons));
-            closeModal();
-            displayLessons();
-        }
-        
-        // Display lessons when the page loads
-        document.addEventListener('DOMContentLoaded', displayLessons);
-    </script>
+    <!-- Lesson Logic -->
+    <script type="module" src="../js/database.js"></script>
 </body>
 </html>
