@@ -30,9 +30,9 @@ function hideModal() {
     editModal.style.display = 'none';
 }
 
-// Close modal when clicking the X
-closeModal.addEventListener('click', hideModal);
-
+if (closeModal) {
+    closeModal.addEventListener('click', hideModal);
+}
 // Close modal when clicking outside
 window.addEventListener('click', (event) => {
     if (event.target === editModal) {
@@ -71,6 +71,7 @@ async function addLesson(title, content) {
 }
 
 // Function to edit a lesson
+if (editLessonForm){
 async function editLesson(id, title, content) {
     try {
         const { error } = await supabase
@@ -88,8 +89,10 @@ async function editLesson(id, title, content) {
         alert('Error updating lesson. Please try again.');
     }
 }
+}
 
 // Function to delete a lesson
+if (deleteLessonForm) {
 async function deleteLesson(id) {
     if (!confirm('Are you sure you want to delete this lesson?')) return;
 
@@ -107,6 +110,7 @@ async function deleteLesson(id) {
         console.error('Error deleting lesson: ', error);
         alert('Error deleting lesson. Please try again.');
     }
+}
 }
 
 // Function to load lessons
