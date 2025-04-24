@@ -1,5 +1,6 @@
 import { supabaseClient as supabase } from './supabase-config.js';
 
+let lastLessonDate = null;
 
 // Database operations
 const lessonForm = document.getElementById('lessonForm');
@@ -10,6 +11,7 @@ const editModal = document.getElementById('editModal');
 const editLessonForm = document.getElementById('editLessonForm');
 const deleteLessonForm = document.getElementById('deleteLessonForm');
 const closeModal = document.querySelector('.close');
+const dailyPercentageElement = document.getElementById('dailyPercentage'); // Add the ID to your HTML element
 
 // Function to show loading state
 function showLoading(element) {
@@ -43,6 +45,29 @@ window.addEventListener('click', (event) => {
     }
 });
 
+// Function to update daily percentage
+function updateDailyPercentage() {
+    const today = new Date().toDateString();
+    
+    // Check if we already added a lesson today
+    if (lastLessonDate !== today) {
+        // Generate random percentage between 0.20 and 0.50
+        const randomPercentage = (Math.random() * (0.50 - 0.20) + 0.20).toFixed(2);
+        
+        // Update the displayed percentage
+        if (dailyPercentageElement) {
+            dailyPercentageElement.textContent = `${randomPercentage}% a day`;
+        }
+        
+        // Update the last lesson date
+        lastLessonDate = today;
+        
+        //Store in localStorage to persist across page refreshes
+        localStorage.setItem('lastLessonDate', today);
+        localStorage.setItem('currentDailyPercentage', randomPercentage);
+    }
+}
+
 // Function to add a new lesson
 async function addLesson(title, content) {
     try {
@@ -61,6 +86,8 @@ async function addLesson(title, content) {
 
         if (error) throw error;
         
+        updateDailyPercentage();
+
         alert('Lesson added successfully!');
         lessonForm.reset();
         await loadLessons();
@@ -195,7 +222,21 @@ if (editLessonForm) {
         const content = document.getElementById('editLessonContent').value;
         await editLesson(id, title, content);
     });
-}
-// Load lessons when the page loads
-document.addEventListener('DOMContentLoaded', loadLessons); 
-
+}//DOMContetnLoader
+document.addEventListener('DOMContentLoaded', () => {
+    // Load lessons (your original functionality)
+    loadLessons();
+    
+    // Initialize percentage display from localStorage if available
+    const storedDate = localStorage.getItem('lastLessonDate');
+    const storedPercentage = localStorage.getItem('currentDailyPercentage');
+    const today = new Date().toDateString();
+    
+    if (storedDate && storedDate === today && storedPercentage && dailyPercentageElement) {
+        dailyPercentageElement.textContent = `${storedPercentage}% a day`;
+        lastLessonDate = storedDate;
+    } else if (dailyPercentageElement) {
+        // Default value if no lesson has been added today
+        dailyPercentageElement.textContent = '0.01% a day';
+    }
+});
