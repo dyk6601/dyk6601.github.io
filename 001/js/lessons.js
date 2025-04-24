@@ -1,4 +1,4 @@
-import { supabaseClient as supabase } from '../js/supabase-config.js';
+import { supabaseClient as supabase } from './supabase-config.js';
 
 
 // Database operations

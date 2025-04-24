@@ -45,6 +45,33 @@ window.addEventListener('click', (event) => {
     }
 });
 
+// Function to animate percentage change
+function animatePercentageChange(startValue, endValue, element, duration = 1500) {
+    const startTime = performance.now();
+    const startValueNum = parseFloat(startValue);
+    const endValueNum = parseFloat(endValue);
+    
+    function updateNumber(currentTime) {
+        const elapsedTime = currentTime - startTime;
+        const progress = Math.min(elapsedTime / duration, 1);
+        
+        // Easing function for smoother animation
+        const easeOutQuad = progress * (2 - progress);
+        
+        // Calculate current value
+        const currentValue = startValueNum + (endValueNum - startValueNum) * easeOutQuad;
+        
+        // Update element with formatted value
+        element.textContent = `${currentValue.toFixed(2)}% a day`;
+        
+        // Continue animation if not complete
+        if (progress < 1) {
+            requestAnimationFrame(updateNumber);
+        }
+    }
+    requestAnimationFrame(updateNumber);
+}
+
 // Function to update daily percentage
 function updateDailyPercentage() {
     const today = new Date().toDateString();
@@ -56,7 +83,8 @@ function updateDailyPercentage() {
         
         // Update the displayed percentage
         if (dailyPercentageElement) {
-            dailyPercentageElement.textContent = `${randomPercentage}% a day`;
+            const currentDailyPercentage = parseFloat(dailyPercentageElement.textContent);
+            animatePercentageChange(currentDailyPercentage || 0.01, randomPercentage, dailyPercentageElement);
         }
         
         // Update the last lesson date
