@@ -108,14 +108,14 @@ body {
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(15, 16, 15, 0.1);
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
         }
         
         .lesson-box:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(21, 150, 68, 0.472);
         }
         
         .lesson-box h2 {

@@ -30,7 +30,6 @@ function showModal() {
 function hideModal() {
     editModal.style.display = 'none';
 }
-
 if (closeModal) {
     closeModal.addEventListener('click', hideModal);
 }
@@ -42,7 +41,7 @@ window.addEventListener('click', (event) => {
 });
 
 // Function to add a new lesson
-async function addLesson(title, content) {
+/*async function addLesson(title, content) {
     try {
         showLoading(loadingIndicator);
         submitButton.disabled = true;
@@ -70,6 +69,7 @@ async function addLesson(title, content) {
         submitButton.disabled = false;
     }
 }
+*/
 
 // Function to edit a lesson
 async function editLesson(id, title, content) {
@@ -141,14 +141,12 @@ async function loadLessons() {
                 <h2>${lesson.title}</h2>
                 <p>${lesson.content}</p>
                 <div class="lesson-date">${new Date(lesson.created_at).toLocaleDateString()}</div>
-                <button class="edit-button" data-id="${lesson.id}">Edit</button>
-                <button class="delete-button" data-id="${lesson.id}">Delete</button>
             `;
             lessonsContainer.appendChild(lessonElement);
         });
 
         // Add event listeners for edit and delete buttons
-        document.querySelectorAll('.edit-button').forEach(button => {
+     /*   document.querySelectorAll('.edit-button').forEach(button => {
             button.addEventListener('click', async (e) => {
                 const id = e.target.dataset.id;
                 const lesson = lessons.find(l => l.id === id);
@@ -157,6 +155,22 @@ async function loadLessons() {
                     document.getElementById('editLessonTitle').value = lesson.title;
                     document.getElementById('editLessonContent').value = lesson.content;
                     showModal();
+                }
+            });
+        }); */
+
+        //Click on lesson to edit lesson
+        document.querySelectorAll('.lesson-box').forEach(box => {
+            box.addEventListener('click', function() {
+                const lessonId = this.dataset.lessonId;
+                if (lessonId) {
+                    const lesson = loadedLessons.find(l => l.id === lessonId);
+                    if (lesson) {
+                        document.getElementById('editLessonId').value = lesson.id;
+                        document.getElementById('editLessonTitle').value = lesson.title;
+                        document.getElementById('editLessonContent').value = lesson.content;
+                        showModal();
+                    }
                 }
             });
         });
