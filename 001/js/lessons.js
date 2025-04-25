@@ -272,8 +272,6 @@ async function loadLessons() {
                 <h2>${lesson.title}</h2>
                 <p>${lesson.content}</p>
                 <div class="lesson-date">${new Date(lesson.created_at).toLocaleDateString()}</div>
-                <button class="edit-button" data-id="${lesson.id}">Edit</button>
-                <button class="delete-button" data-id="${lesson.id}">Delete</button>
             `;
             lessonsContainer.appendChild(lessonElement);
         });
