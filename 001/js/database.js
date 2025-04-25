@@ -126,14 +126,16 @@ async function addLesson(title, content) {
         showLoading(loadingIndicator);
         submitButton.disabled = true;
 
+        // No need to generate an ID manually - let the database handle it
         const { data, error } = await supabase
             .from('lessons')
             .insert([
                 { 
+                    // Don't include id here - let Supabase use the default gen_random_uuid()
                     title: title, 
                     content: content,
                     created_at: new Date().toISOString(),
-                    user_id: user.id // Add user ID to associate lessons with specific users
+                    user_id: user.id // This comes from the authenticated user
                 }
             ]);
 
@@ -210,7 +212,7 @@ async function deleteLesson(id) {
         const { data: lessonData, error: fetchError } = await supabase
             .from('lessons')
             .select('user_id')
-            .eq('id', user_id)
+            .eq('id', id)
             .single();
             
         if (fetchError) throw fetchError;
@@ -223,7 +225,7 @@ async function deleteLesson(id) {
         const { error } = await supabase
             .from('lessons')
             .delete()
-            .eq('id', user_id)
+            .eq('id', id)
             .eq('user_id', user.id); // Additional check to ensure user can only delete their own lessons
 
         if (error) throw error;
