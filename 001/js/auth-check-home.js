@@ -9,10 +9,10 @@ async function checkAuthStatus() {
         
         if (session) {
             // User is logged in
-            authLink.innerHTML = '<a href="../Login/logout.html">Logout</a>';
+            authLink.innerHTML = '<a href="./Login/logout.html">Logout</a>';
         } else {
             // User is not logged in
-            authLink.innerHTML = '<a href="../Login/login.html">Login</a>';
+            authLink.innerHTML = '<a href="./Login/login.html">Login</a>';
         }
     } catch (error) {
         console.error('Error checking auth status:', error);

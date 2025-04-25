@@ -63,7 +63,7 @@ window.addEventListener('click', (event) => {
 });
 
 // Function to animate percentage change
-function animatePercentageChange(startValue, endValue, element, duration = 1500) {
+function animatePercentageChange(startValue, endValue, element, duration = 3000) {
     const startTime = performance.now();
     const startValueNum = parseFloat(startValue);
     const endValueNum = parseFloat(endValue);
