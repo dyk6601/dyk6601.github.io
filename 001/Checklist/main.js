@@ -1,150 +1,243 @@
-// Import Supabase client
-import { supabaseClient } from '../js/supabase-config.js';
+// main.js - Checklist functionality
+import { supabaseClient as supabase } from '../js/supabase-config.js';
 
-// DOM Elements
-const checklistForm = document.getElementById('checklistForm');
-const checklistItems = document.getElementById('checklistItems');
-const addItemBtn = document.getElementById('addItemBtn');
-const newItemInput = document.getElementById('newItem');
+document.addEventListener('DOMContentLoaded', () => {
+    resetChecklistIfNeeded(); 
 
-// Function to load checklist items from Supabase
-async function loadChecklistItems() {
-    try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (!session) {
-            console.log('No user session found');
-            return;
+    const newItemInput = document.getElementById('newItem');
+    const addItemBtn = document.getElementById('addItemBtn');
+    const checklistItems = document.getElementById('checklistItems');
+    
+    // Check authentication before loading checklist
+    checkAuth();
+    
+    // Event listener for adding new items
+    addItemBtn.addEventListener('click', addChecklistItem);
+    
+    // Allow adding items by pressing Enter
+    newItemInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addChecklistItem();
         }
-
-        const { data, error } = await supabaseClient
-            .from('checklist_items')
-            .select('*')
-            .eq('user_id', session.user.id)
-            .order('created_at', { ascending: true });
-
-        if (error) throw error;
-
-        checklistItems.innerHTML = '';
-        data.forEach(item => {
-            addChecklistItem(item.id, item.text, item.completed);
-        });
-    } catch (error) {
-        console.error('Error loading checklist items:', error);
-    }
-}
-
-// Function to add a new checklist item
-async function addChecklistItem(id, text, completed = false) {
-    const itemDiv = document.createElement('div');
-    itemDiv.className = 'checklist-item';
-    itemDiv.dataset.id = id;
-
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = completed;
-    checkbox.addEventListener('change', async () => {
-        await toggleItemStatus(id, checkbox.checked);
     });
-
-    const itemText = document.createElement('span');
-    itemText.textContent = text;
-    if (completed) {
-        itemText.classList.add('completed');
-    }
-
-    const deleteBtn = document.createElement('button');
-    deleteBtn.textContent = 'Delete';
-    deleteBtn.addEventListener('click', async () => {
-        await deleteChecklistItem(id);
-        itemDiv.remove();
-    });
-
-    itemDiv.appendChild(checkbox);
-    itemDiv.appendChild(itemText);
-    itemDiv.appendChild(deleteBtn);
-    checklistItems.appendChild(itemDiv);
-}
-
-// Function to save a new checklist item to Supabase
-async function saveChecklistItem(text) {
-    try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (!session) {
-            console.log('No user session found');
-            return;
-        }
-
-        const { data, error } = await supabaseClient
-            .from('checklist_items')
-            .insert([
-                { 
-                    text: text,
-                    user_id: session.user.id,
-                    completed: false
-                }
-            ])
-            .select()
-            .single();
-
-        if (error) throw error;
-        return data;
-    } catch (error) {
-        console.error('Error saving checklist item:', error);
-        throw error;
-    }
-}
-
-// Function to toggle item status in Supabase
-async function toggleItemStatus(id, completed) {
-    try {
-        const { error } = await supabaseClient
-            .from('checklist_items')
-            .update({ completed: completed })
-            .eq('id', id);
-
-        if (error) throw error;
-
-        const itemText = document.querySelector(`.checklist-item[data-id="${id}"] span`);
-        if (itemText) {
-            if (completed) {
-                itemText.classList.add('completed');
-            } else {
-                itemText.classList.remove('completed');
-            }
-        }
-    } catch (error) {
-        console.error('Error toggling item status:', error);
-    }
-}
-
-// Function to delete a checklist item from Supabase
-async function deleteChecklistItem(id) {
-    try {
-        const { error } = await supabaseClient
-            .from('checklist_items')
-            .delete()
-            .eq('id', id);
-
-        if (error) throw error;
-    } catch (error) {
-        console.error('Error deleting checklist item:', error);
-    }
-}
-
-// Event Listeners
-addItemBtn.addEventListener('click', async (e) => {
-    e.preventDefault();
-    const text = newItemInput.value.trim();
-    if (text) {
+    
+    // Main functions
+    async function checkAuth() {
         try {
-            const newItem = await saveChecklistItem(text);
-            addChecklistItem(newItem.id, text);
-            newItemInput.value = '';
+            const { data: { user }, error } = await supabase.auth.getUser();
+            
+            if (error || !user) {
+                showAuthMessage();
+                return;
+            }
+            
+            // User is authenticated, load their checklist items
+            loadChecklistItems();
         } catch (error) {
-            console.error('Error adding new item:', error);
+            console.error('Authentication error:', error);
+            showAuthMessage();
+        }
+    }
+    
+    function showAuthMessage() {
+        checklistItems.innerHTML = `
+            <div class="auth-message">
+                <p>Please <a href="../Login/login.html">login</a> to use the checklist feature.</p>
+            </div>
+        `;
+        newItemInput.disabled = true;
+        addItemBtn.disabled = true;
+    }
+    
+    async function loadChecklistItems() {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            if (!user) return;
+            
+            checklistItems.innerHTML = '<div class="loading">Loading your checklist...</div>';
+            
+            const { data, error } = await supabase
+                .from('checklist')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: false });
+                
+            if (error) throw error;
+            
+            checklistItems.innerHTML = '';
+            
+            if (data.length === 0) {
+                checklistItems.innerHTML = '<p>Your checklist is empty. Add some items to get started!</p>';
+                return;
+            }
+            
+            data.forEach(item => {
+                addItemToDOM(item);
+            });
+        } catch (error) {
+            console.error('Error loading checklist:', error);
+            checklistItems.innerHTML = '<p>Error loading your checklist. Please try again later.</p>';
+        }
+    }
+    
+    async function addChecklistItem() {
+        try {
+            const itemText = newItemInput.value.trim();
+            
+            if (!itemText) return;
+            
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            if (!user) {
+                alert('Please login to add items to your checklist.');
+                return;
+            }
+            
+            // Disable input while adding
+            newItemInput.disabled = true;
+            addItemBtn.disabled = true;
+            
+            const { data, error } = await supabase
+                .from('checklist')
+                .insert([
+                    {
+                        text: itemText,
+                        completed: false,
+                        user_id: user.id
+                    }
+                ])
+                .select();
+                
+            if (error) throw error;
+            
+            // Add the new item to the DOM
+            if (data && data.length > 0) {
+                // Clear the no items message if it exists
+                if (checklistItems.innerHTML.includes('Your checklist is empty')) {
+                    checklistItems.innerHTML = '';
+                }
+                
+                addItemToDOM(data[0]);
+                newItemInput.value = '';
+            }
+        } catch (error) {
+            console.error('Error adding checklist item:', error);
+            alert('Failed to add item. Please try again.');
+        } finally {
+            newItemInput.disabled = false;
+            addItemBtn.disabled = false;
+            newItemInput.focus();
+        }
+    }
+    
+    function addItemToDOM(item) {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'checklist-item';
+        itemElement.dataset.id = item.id;
+        
+        itemElement.innerHTML = `
+            <input type="checkbox" id="item-${item.id}" ${item.completed ? 'checked' : ''}>
+            <label for="item-${item.id}" class="${item.completed ? 'completed' : ''}">${item.text}</label>
+            <button class="delete-btn">Delete</button>
+        `;
+        
+        // Add event listeners
+        const checkbox = itemElement.querySelector(`#item-${item.id}`);
+        checkbox.addEventListener('change', () => toggleItemStatus(item.id, checkbox.checked));
+        
+        const deleteBtn = itemElement.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', () => deleteItem(item.id));
+        
+        // Add to the top of the list
+        checklistItems.prepend(itemElement);
+    }
+    
+    async function toggleItemStatus(id, completed) {
+        try {
+            const label = document.querySelector(`[data-id="${id}"] label`);
+            
+            if (completed) {
+                label.classList.add('completed');
+            } else {
+                label.classList.remove('completed');
+            }
+            
+            const { error } = await supabase
+                .from('checklist')
+                .update({ completed })
+                .eq('id', id);
+                
+            if (error) throw error;
+        } catch (error) {
+            console.error('Error updating item status:', error);
+            // Revert the UI change if the update failed
+            const checkbox = document.querySelector(`#item-${id}`);
+            checkbox.checked = !completed;
+            
+            const label = document.querySelector(`[data-id="${id}"] label`);
+            if (!completed) {
+                label.classList.add('completed');
+            } else {
+                label.classList.remove('completed');
+            }
+            
+            alert('Failed to update item status. Please try again.');
+        }
+    }
+    
+    async function deleteItem(id) {
+        if (!confirm('Are you sure you want to delete this item?')) return;
+        
+        try {
+            const { error } = await supabase
+                .from('checklist')
+                .delete()
+                .eq('id', id);
+                
+            if (error) throw error;
+            
+            // Remove from DOM
+            const itemElement = document.querySelector(`[data-id="${id}"]`);
+            itemElement.remove();
+            
+            // Check if list is now empty
+            if (checklistItems.children.length === 0) {
+                checklistItems.innerHTML = '<p>Your checklist is empty. Add some items to get started!</p>';
+            }
+        } catch (error) {
+            console.error('Error deleting item:', error);
+            alert('Failed to delete item. Please try again.');
         }
     }
 });
+async function resetChecklistIfNeeded() {
+    const now = new Date();
+    const currentDate = now.toISOString().split('T')[0]; // e.g., "2025-04-25"
+    const resetTime = new Date(`${currentDate}T12:00:00`);
 
-// Load checklist items when the page loads
-document.addEventListener('DOMContentLoaded', loadChecklistItems);
+    const lastResetDate = localStorage.getItem('lastChecklistReset');
+
+    // If it's a new day AND it's after 12pm
+    if (lastResetDate !== currentDate && now >= resetTime) {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            // Reset all items for the user
+            const { error } = await supabase
+                .from('checklist')
+                .update({ completed: false })
+                .eq('user_id', user.id);
+
+            if (error) throw error;
+
+            localStorage.setItem('lastChecklistReset', currentDate);
+            console.log('Checklist reset at noon.');
+
+        } catch (error) {
+            console.error('Failed to reset checklist:', error);
+        }
+    }
+};

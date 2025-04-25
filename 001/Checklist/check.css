@@ -293,3 +293,8 @@ body {
 .checklist-item button:hover {
     background-color: #cc0000;
 }
+
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
