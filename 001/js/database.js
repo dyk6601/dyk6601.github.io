@@ -210,7 +210,7 @@ async function deleteLesson(id) {
         const { data: lessonData, error: fetchError } = await supabase
             .from('lessons')
             .select('user_id')
-            .eq('id', id)
+            .eq('id', user_id)
             .single();
             
         if (fetchError) throw fetchError;
@@ -223,7 +223,7 @@ async function deleteLesson(id) {
         const { error } = await supabase
             .from('lessons')
             .delete()
-            .eq('id', id)
+            .eq('id', user_id)
             .eq('user_id', user.id); // Additional check to ensure user can only delete their own lessons
 
         if (error) throw error;
