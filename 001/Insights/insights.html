@@ -36,17 +36,6 @@
   <script type="module" src="../js/supabase-config.js"></script>
 
   <!-- Calendar and Auth Script -->
-  <script type="module">
-    import { checkAuthStatus } from '../js/auth-check.js';
-    document.addEventListener('DOMContentLoaded', () => {
-      checkAuthStatus();
-
-      const calendarEl = document.getElementById('calendar');
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth'
-      });
-      calendar.render();
-    });
-  </script>
+  <script type="module" src="insights.js"></script>
 </body>
 </html>

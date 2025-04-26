@@ -157,35 +157,57 @@ document.addEventListener('DOMContentLoaded', () => {
     async function toggleItemStatus(id, completed) {
         try {
             const label = document.querySelector(`[data-id="${id}"] label`);
-            
+            const itemText = label.textContent;
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+    
             if (completed) {
                 label.classList.add('completed');
+    
+                // Add to calendar_events if completed
+                const today = new Date().toISOString().split('T')[0]; // e.g., '2025-04-25'
+                await supabase
+                    .from('calendar_events')
+                    .insert([
+                        {
+                            user_id: user.id,
+                            title: itemText,
+                            date: today
+                        }
+                    ]);
             } else {
                 label.classList.remove('completed');
+    
+                // Optional: Remove event if unchecked
+                await supabase
+                    .from('calendar_events')
+                    .delete()
+                    .eq('user_id', user.id)
+                    .eq('title', itemText); // or use item_id if more precise
             }
-            
+    
             const { error } = await supabase
                 .from('checklist')
                 .update({ completed })
                 .eq('id', id);
-                
+    
             if (error) throw error;
         } catch (error) {
             console.error('Error updating item status:', error);
-            // Revert the UI change if the update failed
+    
+            // Revert UI change if something failed
             const checkbox = document.querySelector(`#item-${id}`);
             checkbox.checked = !completed;
-            
             const label = document.querySelector(`[data-id="${id}"] label`);
             if (!completed) {
                 label.classList.add('completed');
             } else {
                 label.classList.remove('completed');
             }
-            
             alert('Failed to update item status. Please try again.');
         }
     }
+    
     
     async function deleteItem(id) {
         if (!confirm('Are you sure you want to delete this item?')) return;
