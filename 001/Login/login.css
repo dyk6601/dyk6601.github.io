@@ -49,23 +49,20 @@ body {
 
 .form-group {
     margin-bottom: 20px;
-}
+    display: flex; /* Enable Flexbox for the form-group */
+    align-items: center; /* Vertically align items in the center */
+    margin-bottom: 10px;
 
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #555;
-    font-weight: bold;
 }
 
 .form-group input {
-    width: 100%;
+    width: 100%; /* Make input take remaining width */
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
     box-sizing: border-box;
-    align-items: center;
+    align-items: center; /* This is redundant here as the parent is aligning */
 }
 
 .form-group input:focus {
@@ -73,7 +70,6 @@ body {
     border-color: rgb(33, 125, 73);
     box-shadow: 0 0 5px rgba(33, 125, 73, 0.3);
 }
-
 button[type="submit"] {
     width: 100%;
     padding: 12px;
