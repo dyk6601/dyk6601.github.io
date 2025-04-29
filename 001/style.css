@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Garamond, serif;
   background-color: #fff;
   min-height: 100vh;
   }
@@ -27,20 +27,15 @@ body {
     font-weight: bold;
   }
 
-  .centered{
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
+  .centered {
     text-align: center;
-    padding-top: 190px;;
-    margin: 0;
+    margin: 180px 0 50px 0;
   }
 
   #dailyPercentage {
-    color: rgb(39, 37, 35);
-    font-size: 1.8em; 
-    font-weight: bold; 
-    font-style: italic; 
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
   }
 
   .type_container{
@@ -59,51 +54,53 @@ body {
   }
 
 
-.lesson-form {
+#lessonForm {
     max-width: 600px;
-    margin: 20px auto;
+    margin: 100px auto;
     padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.form-group input,
-.form-group textarea {
+#lessonContent {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
+    padding: 15px;
+    border: none;
     border-radius: 4px;
     font-size: 16px;
-}
-
-.form-group textarea {
-    height: 100px;
+    background: transparent;
     resize: vertical;
+    min-height: 100px;
+    outline: none;
+    text-align: left;
 }
 
-button[type="submit"] {
+#lessonContent:focus {
+    outline: none;
+}
+
+#submitButton {
     background-color: #4CAF50;
     color: white;
-    padding: 10px 20px;
     border: none;
+    padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    display: block;
+    margin: 0 auto;
 }
 
-button[type="submit"]:hover {
+#submitButton:hover {
     background-color: #45a049;
+}
+
+#loadingIndicator {
+    text-align: center;
+    margin-top: 10px;
+    color: #666;
 }
 
 /* Lesson Box Styles */
@@ -136,15 +133,6 @@ button[type="submit"]:hover {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-}
-
-/* Loading states */
-#loadingIndicator,
-#loadingLessons {
-    text-align: center;
-    padding: 10px;
-    color: #666;
-    font-style: italic;
 }
 
 /* Error messages */

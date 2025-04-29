@@ -161,7 +161,7 @@ async function addLesson(title, content) {
 }
 
 // Function to edit a lesson
-async function editLesson(id, title, content) {
+async function editLesson(id, content) {
     try {
         const { user, error: authError } = await checkAuth();
         if (authError || !user) {
@@ -186,9 +186,9 @@ async function editLesson(id, title, content) {
 
         const { error } = await supabase
             .from('lessons')
-            .update({ title, content })
+            .update({ content })
             .eq('id', id)
-            .eq('user_id', user.id); // Additional check to ensure user can only update their own lessons
+            .eq('user_id', user.id);
 
         if (error) throw error;
 
@@ -446,6 +446,30 @@ document.addEventListener('click', (e) => {
         if (dropdown.classList.contains('show')) {
             dropdown.classList.remove('show');
         }
+    }
+});
+
+// Add keyboard shortcut for Add Lesson button
+document.addEventListener('keydown', (e) => {
+    // Check if Ctrl+Enter (Windows) or Cmd+Enter (Mac) is pressed, or Shift+Enter
+    if (((e.ctrlKey || e.metaKey) && e.key === 'Enter') || (e.shiftKey && e.key === 'Enter')) {
+        // Check if we're in the main form
+        if (document.activeElement.id === 'lessonContent') {
+            e.preventDefault();
+            document.getElementById('submitButton').click();
+        }
+        // Check if we're in the edit form
+        else if (document.activeElement.id === 'editLessonContent') {
+            e.preventDefault();
+            document.querySelector('#editLessonForm button[type="submit"]').click();
+        }
+    }
+    
+    // Check if Ctrl+D (Windows) or Cmd+D (Mac) is pressed and modal is open
+    if ((e.ctrlKey || e.metaKey) && e.key === 'd' && editModal.style.display === 'block') {
+        e.preventDefault();
+        const id = document.getElementById('editLessonId').value;
+        deleteLesson(id);
     }
 });
 

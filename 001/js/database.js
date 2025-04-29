@@ -428,6 +428,18 @@ if (editLessonForm) {
     });
 }
 
+// Add keyboard shortcut for Add Lesson button
+document.addEventListener('keydown', (e) => {
+    // Check if Ctrl+Enter (Windows) or Cmd+Enter (Mac) is pressed, or Shift+Enter
+    if (((e.ctrlKey || e.metaKey) && e.key === 'Enter') || (e.shiftKey && e.key === 'Enter')) {
+        // Check if we're in the main form
+        if (document.activeElement.id === 'lessonContent') {
+            e.preventDefault();
+            document.getElementById('submitButton').click();
+        }
+    }
+});
+
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
     // Check authentication status
