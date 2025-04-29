@@ -7,7 +7,7 @@ body {
 }
     
 .lesson {
-    padding: 30px;
+    padding: 15px;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -18,7 +18,7 @@ body {
     gap: 30px;
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0;
 }
 
 .lesson-box {
@@ -30,6 +30,7 @@ body {
     box-shadow: 0 5px 15px rgba(56, 193, 65, 0.1);
     transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
+    position: relative;
 }
 
 .lesson-box:hover {
@@ -104,9 +105,12 @@ body {
 }
 
 .lesson-date {
-    color: #666;
+    color: #ffb6c1;
     font-size: 0.9em;
-    margin-top: 10px;
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    margin: 0;
 }
 
 /* Modal Styles */
@@ -315,7 +319,7 @@ body {
 
 .lessons-section {
     max-width: 800px;
-    margin: 70px auto;
-    padding: 20px;
+    margin: 0 auto;
+    padding: 10px;
     font-family: Arial, Helvetica, sans-serif;
 }

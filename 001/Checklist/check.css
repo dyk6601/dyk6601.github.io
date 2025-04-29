@@ -544,6 +544,6 @@ body {
 }
 
 .new-item-checkbox-container input[type="text"]::placeholder {
-    color: #999;
+    color: #ffb6c1;
     font-style: italic;
 }

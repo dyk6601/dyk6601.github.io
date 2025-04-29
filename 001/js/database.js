@@ -67,24 +67,23 @@ function animatePercentageChange(startValue, endValue, element, duration = 3000)
 // Function to update daily percentage
 function updateDailyPercentage() {
     const today = new Date().toDateString();
+    const storedDate = localStorage.getItem('lastLessonDate');
+    const storedPercentage = localStorage.getItem('currentDailyPercentage');
     
-    // Check if we already added a lesson today
-    if (lastLessonDate !== today) {
+    // Only generate new percentage if it's a new day
+    if (storedDate !== today) {
         // Generate random percentage between 0.20 and 0.50
         const randomPercentage = (Math.random() * (0.50 - 0.20) + 0.20).toFixed(2);
         
-        // Update the displayed percentage
-        if (dailyPercentageElement) {
-            const currentDailyPercentage = parseFloat(dailyPercentageElement.textContent);
-            animatePercentageChange(currentDailyPercentage || 0.01, randomPercentage, dailyPercentageElement);
-        }
-        
-        // Update the last lesson date
-        lastLessonDate = today;
-        
-        //Store in localStorage to persist across page refreshes
+        // Store the new percentage
         localStorage.setItem('lastLessonDate', today);
         localStorage.setItem('currentDailyPercentage', randomPercentage);
+    }
+    
+    // Always animate from 0.01 to the stored percentage
+    if (dailyPercentageElement) {
+        const targetPercentage = storedPercentage || '0.01';
+        animatePercentageChange(0.01, targetPercentage, dailyPercentageElement);
     }
 }
 
@@ -113,7 +112,21 @@ async function addLesson(content) {
 
         if (error) throw error;
         
-        updateDailyPercentage();
+        // Update the percentage with animation
+        const today = new Date().toDateString();
+        const storedDate = localStorage.getItem('lastLessonDate');
+        const storedPercentage = localStorage.getItem('currentDailyPercentage');
+        
+        if (storedDate !== today) {
+            const randomPercentage = (Math.random() * (0.50 - 0.20) + 0.20).toFixed(2);
+            localStorage.setItem('lastLessonDate', today);
+            localStorage.setItem('currentDailyPercentage', randomPercentage);
+            if (dailyPercentageElement) {
+                animatePercentageChange(0.01, randomPercentage, dailyPercentageElement);
+            }
+        } else if (dailyPercentageElement) {
+            animatePercentageChange(0.01, storedPercentage, dailyPercentageElement);
+        }
 
         alert('Lesson added successfully!');
         lessonForm.reset();
@@ -470,5 +483,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         // User is not logged in
         showLoginUI();
+    }
+});
+
+// Add event listener for homepage navbar click
+document.addEventListener('DOMContentLoaded', () => {
+    const homeLink = document.querySelector('.nav a[href="../index.html"]');
+    if (homeLink) {
+        homeLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            updateDailyPercentage();
+            window.location.href = '../index.html';
+        });
     }
 });

@@ -271,16 +271,18 @@ async function loadLessons() {
         lessons.forEach(lesson => {
             const lessonElement = document.createElement('div');
             lessonElement.className = 'lesson-box';
+            const date = new Date(lesson.created_at);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             lessonElement.innerHTML = `
                 <p>${lesson.content}</p>
-                <div class="lesson-date">${new Date(lesson.created_at).toLocaleDateString()}</div>
+                <div class="lesson-date">${date.toLocaleDateString('en-US', options)}</div>
             `;
             
             // Add click event to open modal
             lessonElement.addEventListener('click', () => {
                 document.getElementById('editLessonId').value = lesson.id;
                 document.getElementById('editLessonContent').value = lesson.content;
-                document.querySelector('.lesson-date-display').textContent = `${new Date(lesson.created_at).toLocaleDateString()}`;
+                document.querySelector('.lesson-date-display').textContent = `${date.toLocaleDateString('en-US', options)}`;
                 showModal();
             });
             

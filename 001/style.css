@@ -176,3 +176,8 @@ button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
+
+#lessonContent::placeholder {
+    color: #ffb6c1;
+    font-style: italic;
+}
