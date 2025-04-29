@@ -10,40 +10,45 @@
 </head>
 
 <body>
-  <nav class = "nav">
+  <nav class="nav">
     <ul>
-      <li><a href =../index.html>Home</a></li>
-      <li><a href =./Lessons/lesson.html>Lesson</a></li>
-      <li><a href= ./Insights/insights.html>Insights</a></li>
-      <li><a href= ./Checklist/checklist.html>Checklist</a></li>
-      <li> <div id="auth-link">
-        <a href="./Login/login.html">Login</a>
-      </div></li>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="./Lessons/lesson.html">Lesson</a></li>
+      <li><a href="./Insights/insights.html">Insights</a></li>
+      <li><a href="./Checklist/checklist.html">Checklist</a></li>
+      <li>
+        <div id="auth-link">
+          <a href="./Login/login.html">Login</a>
+        </div>
+      </li>
     </ul>
   </nav>
-<div class="centered">
-  <span id="dailyPercentage">0.01% a day</span>
-</div>
 
-<div class="form-container">
-  <form id="lessonForm">
-    <div class="form-group">
-      <textarea id="lessonContent" name="lessonContent" placeholder="Just write!" required></textarea>
+  <div class="main-content">
+    <div class="centered">
+      <span id="dailyPercentage">0.01% a day</span>
     </div>
-    <button type="submit" id="submitButton">Add Lesson</button>
-    <div id="loadingIndicator" style="display: none;">Loading...</div>
-  </form>
-</div>
 
-<!-- Supabase Configuration -->
-<script type="module" src="js/supabase-config.js"></script>
-<!-- Auth Check Script -->
-<script type="module">
-  import { checkAuthStatus } from './js/auth-check-home.js';
-  document.addEventListener('DOMContentLoaded', checkAuthStatus);
-</script>
-<!-- Database Operations -->
-<script type = "module" src="js/database.js"></script>
+    <div class="form-container">
+      <form id="lessonForm">
+        <div class="form-group">
+          <textarea id="lessonContent" name="lessonContent" placeholder="Just write!" required></textarea>
+        </div>
+        <button type="submit" id="submitButton">Add Lesson</button>
+        <div id="loadingIndicator" style="display: none;">Loading...</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Supabase Configuration -->
+  <script type="module" src="js/supabase-config.js"></script>
+  <!-- Auth Check Script -->
+  <script type="module">
+    import { checkAuthStatus } from './js/auth-check-home.js';
+    document.addEventListener('DOMContentLoaded', checkAuthStatus);
+  </script>
+  <!-- Database Operations -->
+  <script type="module" src="js/database.js"></script>
 </body>
 </html>
 

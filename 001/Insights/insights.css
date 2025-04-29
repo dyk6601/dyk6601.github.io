@@ -6,24 +6,43 @@ body {
   min-height: 100vh;
 }
 
+/* nav bar container*/
 .nav {
-  display: flex;
+  width: 200px;
+  min-height: 100vh;
   background-color: #f0dfdf;
-  padding: 10px 20px;
+  padding: 20px 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
-
+  
 .nav ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   display: flex;
+  flex-direction: column;
   gap: 20px;
+}
+
+.nav li {
+  padding: 0 20px;
 }
 
 .nav a {
   text-decoration: none;
   color: rgb(33, 125, 73);
   font-weight: bold;
+  font-size: 1.1em;
+  display: block;
+  padding: 10px 0;
+  transition: color 0.2s;
+}
+
+.nav a:hover {
+  color: rgb(28, 105, 61);
 }
 
 h1 {
@@ -32,31 +51,41 @@ h1 {
   color: #1b1212;
 }
 
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
 .Streak {
-  margin: 40px auto;
-  background: linear-gradient(to bottom right, rgb(249, 22, 22), rgb(232, 175, 68));
-  width: 90%;
-  max-width: 500px;
-  padding: 30px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-  border-radius: 12px;
   text-align: center;
-  color: #fff;
+  margin: 40px 0;
+}
+
+.Streak h2 {
+  color: rgb(33, 125, 73);
+  font-size: 1.8em;
+  margin-bottom: 10px;
+}
+
+.Streak h3 {
+  font-size: 2.5em;
+  margin: 20px 0;
+  color: #333;
 }
 
 .Streak img {
-  width: 50px;
-  margin-top: 10px;
+  width: 100px;
+  height: auto;
 }
 
 #calendar {
-  max-width: 90%;
+  max-width: 900px;
   margin: 40px auto;
-  height: 500px;
-  background-color: #fafafa;
-  padding: 10px;
+  padding: 20px;
+  background: white;
   border-radius: 10px;
-  box-shadow: 0 0 10px #ccc;
+  box-shadow: 0 5px 15px rgba(56, 193, 65, 0.1);
 }
 
 @media screen and (max-width: 768px) {

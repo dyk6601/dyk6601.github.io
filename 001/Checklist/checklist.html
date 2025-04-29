@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checklist - 0.01% a day</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="check.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <nav class="nav">
@@ -14,24 +15,36 @@
             <li><a href="../Lessons/lesson.html">Lesson</a></li>
             <li><a href="../Insights/insights.html">Insights</a></li>
             <li><a href="checklist.html">Checklist</a></li>
-            <li><div id="auth-link">
-                <!-- This will be updated by the auth-check.js script -->
-                <a href="../Login/login.html">Login</a>
-            </div></li>
+            <li>
+                <div id="auth-link">
+                    <a href="../Login/login.html">Login</a>
+                </div>
+            </li>
         </ul>
     </nav>
 
-    <div class="container">
-        <h1>Daily Checklist</h1>
-        <form id="checklistForm">
-            <div class="input-group">
-                <input type="text" id="newItem" placeholder="Add a new item...">
-                <button type="button" id="addItemBtn">Add</button>
+    <div class="main-content">
+        <div class="container">
+            <h1>Daily Goals & Tasks</h1>
+            
+            <!-- Big Goals Section -->
+            <section class="big-goals-section">
+                <h2>Big Goals</h2>
+                <div class="input-group">
+                    <input type="text" id="newGoalInput" placeholder="Add a new big goal...">
+                    <button type="button" id="addGoalBtn">Add Goal</button>
+                </div>
+            </section>
+
+            <!-- Goals Container -->
+            <div id="goalsContainer">
+                <!-- Goals and their checklist items will be added here dynamically -->
+                <div class="empty-state">
+                    <p>Start by adding your big goals above!</p>
+                    <p>Then add specific tasks to each goal to track your progress.</p>
+                </div>
             </div>
-            <div id="checklistItems" class="checklist-items">
-                <!-- Checklist items will be added here dynamically -->
-            </div>
-        </form>
+        </div>
     </div>
 
     <!-- Supabase Configuration -->

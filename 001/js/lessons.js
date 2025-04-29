@@ -236,6 +236,7 @@ async function deleteLesson(id) {
         if (error) throw error;
         
         alert('Lesson deleted successfully!');
+        hideModal(); // Close the modal after successful deletion
         await loadLessons();
     } catch (error) {
         console.error('Error deleting lesson: ', error);

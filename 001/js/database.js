@@ -37,31 +37,6 @@ function hideLoading(element) {
     }
 }
 
-// Function to show modal
-function showModal() {
-    if (editModal) {
-        editModal.style.display = 'block';
-    }
-}
-
-// Function to hide modal
-function hideModal() {
-    if (editModal) {
-        editModal.style.display = 'none';
-    }
-}
-
-if (closeModal) {
-    closeModal.addEventListener('click', hideModal);
-}
-
-// Close modal when clicking outside
-window.addEventListener('click', (event) => {
-    if (event.target === editModal) {
-        hideModal();
-    }
-});
-
 // Function to animate percentage change
 function animatePercentageChange(startValue, endValue, element, duration = 3000) {
     const startTime = performance.now();
@@ -325,6 +300,7 @@ function showLessonUI() {
     }
 }
 
+/*
 // Function to handle user login
 async function handleLogin(email, password) {
     try {
@@ -367,6 +343,54 @@ async function handleSignup(email, password) {
         hideLoading(document.getElementById('signupLoading'));
     }
 }
+// Event listener for login form submission
+if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        await handleLogin(email, password);
+    });
+}
+// Event listener for signup form submission
+const signupForm = document.getElementById('signupForm');
+if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
+        await handleSignup(email, password);
+    });
+}
+
+    */
+
+/*
+// Function to show modal
+function showModal() {
+    if (editModal) {
+        editModal.style.display = 'block';
+    }
+}
+
+// Function to hide modal
+function hideModal() {
+    if (editModal) {
+        editModal.style.display = 'none';
+    }
+}
+
+if (closeModal) {
+    closeModal.addEventListener('click', hideModal);
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', (event) => {
+    if (event.target === editModal) {
+        hideModal();
+    }
+});
+*/
 
 // Function to handle user logout
 async function handleLogout() {
@@ -380,15 +404,6 @@ async function handleLogout() {
     }
 }
 
-// Event listener for login form submission
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-        await handleLogin(email, password);
-    });
-}
 
 // Event listener for logout button
 if (logoutButton) {
@@ -398,16 +413,6 @@ if (logoutButton) {
     });
 }
 
-// Event listener for signup form submission
-const signupForm = document.getElementById('signupForm');
-if (signupForm) {
-    signupForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('signupEmail').value;
-        const password = document.getElementById('signupPassword').value;
-        await handleSignup(email, password);
-    });
-}
 
 // Event listener for form submission
 if (lessonForm) {

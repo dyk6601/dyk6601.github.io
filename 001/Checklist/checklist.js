@@ -2,31 +2,142 @@
 import { supabaseClient as supabase } from '../js/supabase-config.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    resetChecklistIfNeeded();
-    
     // DOM Elements
-    const newItemInput = document.getElementById('newItem');
-    const addItemBtn = document.getElementById('addItemBtn');
     const newGoalInput = document.getElementById('newGoalInput');
     const addGoalBtn = document.getElementById('addGoalBtn');
-    const checklistContainer = document.getElementById('checklistContainer');
+    const goalsContainer = document.getElementById('goalsContainer');
     
-    // Check authentication before loading
+    // Create modal element
+    const modalHTML = `
+        <div id="editGoalModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Edit Goal</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="editGoalTitle" class="modal-input" placeholder="Goal Title">
+                    <div id="editItemsList" class="edit-items-list">
+                        <!-- Items will be added here -->
+                    </div>
+                    <div class="add-item-modal">
+                        <input type="text" id="newItemModal" placeholder="Add new item">
+                        <button id="addItemModal">Add Item</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="saveGoalChanges" class="save-btn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    // Modal Elements
+    const modal = document.getElementById('editGoalModal');
+    const closeBtn = modal.querySelector('.close');
+    const editGoalTitle = document.getElementById('editGoalTitle');
+    const editItemsList = document.getElementById('editItemsList');
+    const newItemModal = document.getElementById('newItemModal');
+    const addItemModal = document.getElementById('addItemModal');
+    const saveGoalChanges = document.getElementById('saveGoalChanges');
+
+    let currentEditingGoal = null;
+
+    // Modal Event Listeners
+    closeBtn.onclick = () => modal.style.display = "none";
+    window.onclick = (e) => {
+        if (e.target === modal) modal.style.display = "none";
+    };
+
+    addItemModal.onclick = () => {
+        const itemText = newItemModal.value.trim();
+        if (itemText) {
+            addItemToEditList(itemText);
+            newItemModal.value = '';
+        }
+    };
+
+    newItemModal.onkeypress = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addItemModal.click();
+        }
+    };
+
+    function addItemToEditList(text, id = null, completed = false) {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'edit-item';
+        itemDiv.dataset.itemId = id;
+        itemDiv.innerHTML = `
+            <input type="checkbox" ${completed ? 'checked' : ''}>
+            <input type="text" value="${text}" class="item-text">
+            <button class="remove-item">×</button>
+        `;
+
+        itemDiv.querySelector('.remove-item').onclick = () => itemDiv.remove();
+        editItemsList.appendChild(itemDiv);
+    }
+
+    saveGoalChanges.onclick = async () => {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            const newTitle = editGoalTitle.value.trim();
+            if (!newTitle) {
+                alert('Please enter a goal title');
+                return;
+            }
+
+            // Update goal title
+            await supabase
+                .from('big_goals')
+                .update({ title: newTitle })
+                .eq('id', currentEditingGoal.id);
+
+            // Delete all existing items for this goal
+            await supabase
+                .from('checklist_items')
+                .delete()
+                .eq('goal_id', currentEditingGoal.id);
+
+            // Add all items from the modal
+            const items = Array.from(editItemsList.children).map(item => ({
+                text: item.querySelector('.item-text').value.trim(),
+                completed: item.querySelector('input[type="checkbox"]').checked,
+                user_id: user.id,
+                goal_id: currentEditingGoal.id,
+                created_at: new Date().toISOString()
+            }));
+
+            if (items.length > 0) {
+                await supabase
+                    .from('checklist_items')
+                    .insert(items);
+            }
+
+            // Refresh the display
+            loadBigGoals();
+            modal.style.display = "none";
+        } catch (error) {
+            console.error('Error saving changes:', error);
+            alert('Failed to save changes. Please try again.');
+        }
+    };
+
+    // Check authentication and load goals
     checkAuth();
     
     // Event Listeners
-    addItemBtn.addEventListener('click', addChecklistItem);
     addGoalBtn.addEventListener('click', addBigGoal);
-    
-    newItemInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') addChecklistItem();
-    });
-    
     newGoalInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') addBigGoal();
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addBigGoal();
+        }
     });
     
-    // Main Functions
     async function checkAuth() {
         try {
             const { data: { user }, error } = await supabase.auth.getUser();
@@ -44,13 +155,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function showAuthMessage() {
-        checklistContainer.innerHTML = `
+        goalsContainer.innerHTML = `
             <div class="auth-message">
                 <p>Please <a href="../Login/login.html">login</a> to use the checklist feature.</p>
             </div>
         `;
-        newItemInput.disabled = true;
-        addItemBtn.disabled = true;
         newGoalInput.disabled = true;
         addGoalBtn.disabled = true;
     }
@@ -58,53 +167,49 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadBigGoals() {
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return;
-            
-            checklistContainer.innerHTML = '<div class="loading">Loading your goals...</div>';
-            
-            // Load big goals with their checklist items
-            const { data: goals, error: goalsError } = await supabase
-                .from('big_goals')
-                .select('*')
-                .eq('user_id', user.id)
-                .order('created_at', { ascending: false });
-                
-            if (goalsError) throw goalsError;
-            
-            checklistContainer.innerHTML = '';
-            
-            if (goals.length === 0) {
-                checklistContainer.innerHTML = `
-                    <div class="empty-state">
-                        <p>You don't have any big goals yet.</p>
-                        <p>Start by adding a big goal that represents your focus or theme.</p>
-                    </div>
-                `;
+            if (!user) {
+                console.log('User not logged in');
                 return;
             }
-            
-            // For each goal, load its checklist items
-            for (const goal of goals) {
-                const { data: items, error: itemsError } = await supabase
-                    .from('checklist_items')
-                    .select('*')
-                    .eq('goal_id', goal.id)
-                    .order('created_at', { ascending: true });
-                    
-                if (itemsError) throw itemsError;
-                
-                addBigGoalToDOM(goal, items || []);
+
+            const { data: goals, error } = await supabase
+                .from('big_goals')
+                .select('*, checklist_items(*)')
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: true });
+
+            if (error) throw error;
+
+            const goalsContainer = document.getElementById('goalsContainer');
+            goalsContainer.innerHTML = '';
+
+            console.log('Goals data:', goals); // Debug log
+
+            if (goals && Array.isArray(goals) && goals.length > 0) {
+                goals.forEach(goal => {
+                    addBigGoalToDOM(goal, goal.checklist_items || []);
+                });
+            } else {
+                goalsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <p>Start by adding your big goals above!</p>
+                        <p>Then add specific tasks to each goal to track your progress.</p>
+                    </div>
+                `;
             }
         } catch (error) {
-            console.error('Error loading goals:', error);
-            checklistContainer.innerHTML = '<p>Error loading your goals. Please try again later.</p>';
+            console.error('Error loading big goals:', error);
+            alert('Failed to load goals: ' + error.message);
         }
     }
     
     async function addBigGoal() {
         try {
             const goalText = newGoalInput.value.trim();
-            if (!goalText) return;
+            if (!goalText) {
+                alert('Please enter a goal description');
+                return;
+            }
             
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) {
@@ -114,13 +219,15 @@ document.addEventListener('DOMContentLoaded', () => {
             
             newGoalInput.disabled = true;
             addGoalBtn.disabled = true;
+            addGoalBtn.textContent = 'Adding...';
             
             const { data, error } = await supabase
                 .from('big_goals')
                 .insert([
                     {
                         title: goalText,
-                        user_id: user.id
+                        user_id: user.id,
+                        created_at: new Date().toISOString()
                     }
                 ])
                 .select();
@@ -129,19 +236,30 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (data && data.length > 0) {
                 // Clear empty state if it exists
-                if (checklistContainer.innerHTML.includes('You don\'t have any big goals')) {
-                    checklistContainer.innerHTML = '';
+                if (goalsContainer.querySelector('.empty-state')) {
+                    goalsContainer.innerHTML = '';
                 }
                 
                 addBigGoalToDOM(data[0], []);
                 newGoalInput.value = '';
+                
+                // Show success feedback
+                const feedback = document.createElement('span');
+                feedback.className = 'success-feedback';
+                feedback.textContent = '✓ Goal added successfully';
+                addGoalBtn.parentNode.appendChild(feedback);
+                
+                setTimeout(() => {
+                    feedback.remove();
+                }, 2000);
             }
         } catch (error) {
-            console.error('Error adding big goal:', error);
-            alert('Failed to add goal. Please try again.');
+            console.error('Error adding goal:', error);
+            alert('Failed to add goal: ' + (error.message || 'Please try again.'));
         } finally {
             newGoalInput.disabled = false;
             addGoalBtn.disabled = false;
+            addGoalBtn.textContent = 'Add Goal';
             newGoalInput.focus();
         }
     }
@@ -155,29 +273,27 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="goal-header">
                 <h3 class="goal-title">${goal.title}</h3>
                 <div class="goal-actions">
-                    <button class="edit-goal-btn">Edit</button>
-                    <button class="delete-goal-btn">Delete</button>
-                    <button class="toggle-goal-btn">▼</button>
+                    <button class="edit-goal-btn" title="Edit Goal"><i class="fas fa-edit"></i></button>
+                    <button class="delete-goal-btn" title="Delete Goal"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
             <div class="goal-items-container">
                 <div class="goal-items-list"></div>
                 <div class="add-item-to-goal">
-                    <input type="text" class="new-item-for-goal" placeholder="Add an action item for this goal">
-                    <button class="add-item-to-goal-btn">Add</button>
+                    <div class="new-item-checkbox-container">
+                        <input type="checkbox" disabled>
+                        <input type="text" class="new-item-for-goal" placeholder="Add a new task...">
+                    </div>
                 </div>
             </div>
         `;
         
         // Add items to this goal
         const itemsList = goalElement.querySelector('.goal-items-list');
-        items.forEach(item => {
-            addItemToDOM(itemsList, item);
-        });
-        
-        // If no items, show message
-        if (items.length === 0) {
-            itemsList.innerHTML = '<p class="no-items">No action items yet. Add some steps to work toward this goal!</p>';
+        if (items) {
+            items.forEach(item => {
+                addItemToDOM(itemsList, item);
+            });
         }
         
         // Add event listeners
@@ -185,31 +301,38 @@ document.addEventListener('DOMContentLoaded', () => {
         deleteBtn.addEventListener('click', () => deleteBigGoal(goal.id));
         
         const editBtn = goalElement.querySelector('.edit-goal-btn');
-        editBtn.addEventListener('click', () => editBigGoal(goal.id, goalElement.querySelector('.goal-title')));
-        
-        const toggleBtn = goalElement.querySelector('.toggle-goal-btn');
-        toggleBtn.addEventListener('click', () => {
-            const itemsContainer = goalElement.querySelector('.goal-items-container');
-            itemsContainer.classList.toggle('collapsed');
-            toggleBtn.textContent = itemsContainer.classList.contains('collapsed') ? '▶' : '▼';
+        editBtn.addEventListener('click', () => {
+            currentEditingGoal = goal;
+            editGoalTitle.value = goal.title;
+            editItemsList.innerHTML = '';
+            if (items) {
+                items.forEach(item => {
+                    addItemToEditList(item.text, item.id, item.completed);
+                });
+            }
+            modal.style.display = "block";
         });
         
-        const addItemBtn = goalElement.querySelector('.add-item-to-goal-btn');
         const itemInput = goalElement.querySelector('.new-item-for-goal');
         
-        addItemBtn.addEventListener('click', () => addItemToGoal(goal.id, itemInput, itemsList));
         itemInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') addItemToGoal(goal.id, itemInput, itemsList);
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addItemToGoal(goal.id, itemInput, itemsList);
+            }
         });
         
         // Add to container (at the top)
-        checklistContainer.prepend(goalElement);
+        goalsContainer.prepend(goalElement);
     }
     
     async function addItemToGoal(goalId, inputElement, itemsList) {
         try {
             const itemText = inputElement.value.trim();
-            if (!itemText) return;
+            if (!itemText) {
+                alert('Please enter a task description');
+                return;
+            }
             
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) {
@@ -217,6 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
+            // Disable input while adding
             inputElement.disabled = true;
             
             const { data, error } = await supabase
@@ -226,7 +350,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         text: itemText,
                         completed: false,
                         user_id: user.id,
-                        goal_id: goalId
+                        goal_id: goalId,
+                        created_at: new Date().toISOString()
                     }
                 ])
                 .select();
@@ -234,17 +359,27 @@ document.addEventListener('DOMContentLoaded', () => {
             if (error) throw error;
             
             if (data && data.length > 0) {
-                // Remove "no items" message if it exists
-                if (itemsList.querySelector('.no-items')) {
+                // Clear any existing content if this is the first item
+                if (itemsList.children.length === 0) {
                     itemsList.innerHTML = '';
                 }
                 
                 addItemToDOM(itemsList, data[0]);
                 inputElement.value = '';
+                
+                // Show success feedback
+                const feedback = document.createElement('span');
+                feedback.className = 'success-feedback';
+                feedback.textContent = '✓';
+                inputElement.parentNode.appendChild(feedback);
+                
+                setTimeout(() => {
+                    feedback.remove();
+                }, 1000);
             }
         } catch (error) {
-            console.error('Error adding item to goal:', error);
-            alert('Failed to add item. Please try again.');
+            console.error('Error adding item:', error);
+            alert('Failed to add item: ' + (error.message || 'Please try again.'));
         } finally {
             inputElement.disabled = false;
             inputElement.focus();
@@ -259,21 +394,11 @@ document.addEventListener('DOMContentLoaded', () => {
         itemElement.innerHTML = `
             <input type="checkbox" id="item-${item.id}" ${item.completed ? 'checked' : ''}>
             <label for="item-${item.id}" class="${item.completed ? 'completed' : ''}">${item.text}</label>
-            <div class="item-actions">
-                <button class="edit-item-btn">Edit</button>
-                <button class="delete-item-btn">Delete</button>
-            </div>
         `;
         
-        // Add event listeners
+        // Add event listener for checkbox
         const checkbox = itemElement.querySelector(`#item-${item.id}`);
         checkbox.addEventListener('change', () => toggleItemStatus(item.id, checkbox.checked));
-        
-        const deleteBtn = itemElement.querySelector('.delete-item-btn');
-        deleteBtn.addEventListener('click', () => deleteItem(item.id, item.goal_id));
-        
-        const editBtn = itemElement.querySelector('.edit-item-btn');
-        editBtn.addEventListener('click', () => editItem(item.id, itemElement.querySelector('label')));
         
         container.appendChild(itemElement);
     }
@@ -303,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 label.classList.remove('completed');
     
-                // Optional: Remove event if unchecked
+                // Remove event if unchecked
                 await supabase
                     .from('calendar_events')
                     .delete()
@@ -322,32 +447,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const checkbox = document.querySelector(`#item-${id}`);
             checkbox.checked = !completed;
             alert('Failed to update item status. Please try again.');
-        }
-    }
-    
-    async function deleteItem(id, goalId) {
-        if (!confirm('Are you sure you want to delete this item?')) return;
-        
-        try {
-            const { error } = await supabase
-                .from('checklist_items')
-                .delete()
-                .eq('id', id);
-                
-            if (error) throw error;
-            
-            // Remove from DOM
-            const itemElement = document.querySelector(`[data-item-id="${id}"]`);
-            const itemsList = itemElement.parentElement;
-            itemElement.remove();
-            
-            // Check if this was the last item in the goal
-            if (itemsList.children.length === 0) {
-                itemsList.innerHTML = '<p class="no-items">No action items yet. Add some steps to work toward this goal!</p>';
-            }
-        } catch (error) {
-            console.error('Error deleting item:', error);
-            alert('Failed to delete item. Please try again.');
         }
     }
     
@@ -375,11 +474,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector(`[data-goal-id="${id}"]`).remove();
             
             // Check if this was the last goal
-            if (checklistContainer.children.length === 0) {
-                checklistContainer.innerHTML = `
+            if (goalsContainer.children.length === 0) {
+                goalsContainer.innerHTML = `
                     <div class="empty-state">
                         <p>You don't have any big goals yet.</p>
-                        <p>Start by adding a big goal that represents your focus or theme.</p>
+                        <p>Start by adding a big goal that represents your focus</p>
                     </div>
                 `;
             }
@@ -388,80 +487,4 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Failed to delete goal. Please try again.');
         }
     }
-    
-    async function editBigGoal(id, titleElement) {
-        const currentTitle = titleElement.textContent;
-        const newTitle = prompt('Edit your big goal:', currentTitle);
-        
-        if (!newTitle || newTitle.trim() === currentTitle) return;
-        
-        try {
-            const { error } = await supabase
-                .from('big_goals')
-                .update({ title: newTitle.trim() })
-                .eq('id', id);
-                
-            if (error) throw error;
-            
-            titleElement.textContent = newTitle.trim();
-        } catch (error) {
-            console.error('Error updating goal:', error);
-            alert('Failed to update goal. Please try again.');
-        }
-    }
-    
-    async function editItem(id, labelElement) {
-        const currentText = labelElement.textContent;
-        const newText = prompt('Edit your item:', currentText);
-        
-        if (!newText || newText.trim() === currentText) return;
-        
-        try {
-            const { error } = await supabase
-                .from('checklist_items')
-                .update({ text: newText.trim() })
-                .eq('id', id);
-                
-            if (error) throw error;
-            
-            labelElement.textContent = newText.trim();
-        } catch (error) {
-            console.error('Error updating item:', error);
-            alert('Failed to update item. Please try again.');
-        }
-    }
 });
-
-async function resetChecklistIfNeeded() {
-    const now = new Date();
-    const currentDate = now.toISOString().split('T')[0];
-    const resetTime = new Date(`${currentDate}T12:00:00`);
-
-    const lastResetDate = localStorage.getItem('lastChecklistReset');
-
-    if (lastResetDate !== currentDate && now >= resetTime) {
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return;
-
-            // Reset all checklist items (not goals)
-            const { error } = await supabase
-                .from('checklist_items')
-                .update({ completed: false })
-                .eq('user_id', user.id);
-
-            if (error) throw error;
-
-            localStorage.setItem('lastChecklistReset', currentDate);
-            console.log('Checklist items reset at noon.');
-
-            // Update UI to reflect reset
-            document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = false;
-                checkbox.nextElementSibling.classList.remove('completed');
-            });
-        } catch (error) {
-            console.error('Failed to reset checklist:', error);
-        }
-    }
-}

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Lessons - 0.01% a day</title>
+    <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="lessons.css" />
 </head>
 <body>
@@ -21,41 +22,48 @@
         </ul>
     </nav>
 
-    <div class="lesson">
-        <h1>Lessons</h1>
+    <div class="main-content">
+        <div class="lesson">
+            <h1>Lessons</h1>
 
-        <!-- Form to add new lesson -->
-        <form id="lessonForm">
-        </form>
-        <div id="loadingIndicator" style="display:none;">Adding lesson...</div>
-
-        <!-- Container for lessons -->
-        <div id="loadingLessons" style="display:none;">Loading lessons...</div>
-        <div class="lesson-container">
-            <!-- Lessons will be dynamically added here -->
-        </div>
-    </div>
-
-    <!-- Modal for editing a lesson -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="lesson-date-display"></div>
-                <div class="dropdown">
-                    <button class="more-options">⋮</button>
-                    <div class="dropdown-content">
-                        <a href="#" class="delete-option">Delete Lesson</a>
-                    </div>
-                </div>
-                <span class="close">&times;</span>
+            <!-- Login message for non-authenticated users -->
+            <div id="loginSection" class="login-message" style="display: none;">
+                <p>Please <a href="../Login/login.html">login</a> to use this feature.</p>
             </div>
-            <form id="editLessonForm">
-                <input type="hidden" id="editLessonId" />
-                <div class="form-group">
-                    <textarea id="editLessonContent" placeholder="Just write!" required></textarea>
-                </div>
-                <button type="submit">Save Changes</button>
+
+            <!-- Form to add new lesson -->
+            <form id="lessonForm">
             </form>
+            <div id="loadingIndicator" style="display:none;">Adding lesson...</div>
+
+            <!-- Container for lessons -->
+            <div id="loadingLessons" style="display:none;">Loading lessons...</div>
+            <div class="lesson-container">
+                <!-- Lessons will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Modal for editing a lesson -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="lesson-date-display"></div>
+                    <div class="dropdown">
+                        <button class="more-options">⋮</button>
+                        <div class="dropdown-content">
+                            <a href="#" class="delete-option">Delete Lesson</a>
+                        </div>
+                    </div>
+                    <span class="close">&times;</span>
+                </div>
+                <form id="editLessonForm">
+                    <input type="hidden" id="editLessonId" />
+                    <div class="form-group">
+                        <textarea id="editLessonContent" placeholder="Just write!" required></textarea>
+                    </div>
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
         </div>
     </div>
 

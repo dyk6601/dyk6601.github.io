@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Insights - 0.01% a day</title>
+  <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="insights.css" />
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
 </head>
@@ -14,23 +15,27 @@
       <li><a href="../Lessons/lesson.html">Lesson</a></li>
       <li><a href="insights.html">Insights</a></li>
       <li><a href="../Checklist/checklist.html">Checklist</a></li>
-      <li> <div id="auth-link">
-        <a href="../Login/login.html">Login</a>
-      </div></li>
+      <li>
+        <div id="auth-link">
+          <a href="../Login/login.html">Login</a>
+        </div>
+      </li>
     </ul>
   </nav>
 
-  <main>
-    <h1>Insights</h1>
+  <div class="main-content">
+    <main>
+      <h1>Insights</h1>
 
-    <section class="Streak">
-      <h2>Current Streak</h2>
-      <h3 id="daysStreak">0 Days</h3> 
-      <img src="blue-blueflame.gif" alt="blueflame" />
-    </section>
+      <section class="Streak">
+        <h2>Current Streak</h2>
+        <h3 id="daysStreak">0 Days</h3> 
+        <img src="blue-blueflame.gif" alt="blueflame" />
+      </section>
 
-    <div id="calendar"></div>
-  </main>
+      <div id="calendar"></div>
+    </main>
+  </div>
 
   <!-- Supabase Configuration -->
   <script type="module" src="../js/supabase-config.js"></script>

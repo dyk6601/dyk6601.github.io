@@ -4,149 +4,175 @@ body {
   font-family: Garamond, serif;
   background-color: #fff;
   min-height: 100vh;
-  }
+  display: flex;
+}
   
-  /* nav bar container*/
-  .nav{
-    display:flex;
-    background-color: #f0dfdf;
-    padding: 10px 20px;
-  }
+/* nav bar container*/
+.nav {
+  width: 200px;
+  min-height: 100vh;
+  background-color: #f0dfdf;
+  padding: 20px 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
   
-  .nav ul{
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: 20px;
-  }
+.nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-  .nav a{
-    text-decoration: none;
-    color: rgb(33, 125, 73);
-    font-weight: bold;
-  }
+.nav li {
+  padding: 0 20px;
+}
 
-  .centered {
-    text-align: center;
-    margin: 180px 0 50px 0;
-  }
+.nav a {
+  text-decoration: none;
+  color: rgb(33, 125, 73);
+  font-weight: bold;
+  font-size: 1.1em;
+  display: block;
+  padding: 10px 0;
+  transition: color 0.2s;
+}
 
-  #dailyPercentage {
-    font-size: 2em;
-    font-weight: bold;
-    color: #333;
-  }
+.nav a:hover {
+  color: rgb(28, 105, 61);
+}
 
-  .type_container{
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    text-align: center;
-    }
+/* Main content wrapper */
+.main-content {
+  flex: 1;
+  margin-left: 200px;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-  .type_bar{
-    width: 70%;
-    padding: 15px 24px;    
-    font-size: 16px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-  }
+.centered {
+  text-align: center;
+  margin: 50px 0;
+}
 
+#dailyPercentage {
+  font-size: 2em;
+  font-weight: bold;
+  color: #333;
+}
+
+.type_container{
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  text-align: center;
+}
+
+.type_bar{
+  width: 70%;
+  padding: 15px 24px;    
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
 
 #lessonForm {
-    max-width: 600px;
-    margin: 100px auto;
-    padding: 20px;
+  max-width: 600px;
+  margin: 100px auto;
+  padding: 20px;
 }
 
 .form-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 #lessonContent {
-    width: 100%;
-    padding: 15px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    background: transparent;
-    resize: vertical;
-    min-height: 100px;
-    outline: none;
-    text-align: left;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  background: transparent;
+  resize: vertical;
+  min-height: 100px;
+  outline: none;
+  text-align: left;
 }
 
 #lessonContent:focus {
-    outline: none;
+  outline: none;
 }
 
 #submitButton {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    display: block;
-    margin: 0 auto;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  display: block;
+  margin: 0 auto;
 }
 
 #submitButton:hover {
-    background-color: #45a049;
+  background-color: #45a049;
 }
 
 #loadingIndicator {
-    text-align: center;
-    margin-top: 10px;
-    color: #666;
+  text-align: center;
+  margin-top: 10px;
+  color: #666;
 }
 
 /* Lesson Box Styles */
 .lesson-box {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
 }
 
 .lesson-box:hover {
-    transform: translateY(-2px);
+  transform: translateY(-2px);
 }
 
 .lesson-box h2 {
-    margin-top: 0;
-    color: #333;
+  margin-top: 0;
+  color: #333;
 }
 
 .lesson-date {
-    color: #666;
-    font-size: 0.9em;
-    margin-top: 10px;
-    font-style: italic;
+  color: #666;
+  font-size: 0.9em;
+  margin-top: 10px;
+  font-style: italic;
 }
 
 .lesson-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 /* Error messages */
 .error-message {
-    color: #dc3545;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #dc3545;
-    border-radius: 4px;
-    background-color: #f8d7da;
+  color: #dc3545;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #dc3545;
+  border-radius: 4px;
+  background-color: #f8d7da;
 }
 
 /* Disabled button state */
 button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
+  opacity: 0.7;
+  cursor: not-allowed;
 }
