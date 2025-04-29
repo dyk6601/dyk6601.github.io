@@ -39,21 +39,22 @@
     <!-- Modal for editing a lesson -->
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <div class="modal-header">
+                <div class="lesson-date-display"></div>
+                <div class="dropdown">
+                    <button class="more-options">⋮</button>
+                    <div class="dropdown-content">
+                        <a href="#" class="delete-option">Delete Lesson</a>
+                    </div>
+                </div>
+                <span class="close">&times;</span>
+            </div>
             <form id="editLessonForm">
                 <input type="hidden" id="editLessonId" />
                 <div class="form-group">
-                    <label for="editLessonTitle">Title:</label>
-                    <input type="text" id="editLessonTitle" required />
-                </div>
-                <div class="form-group">
-                    <label for="editLessonContent">Content:</label>
-                    <textarea id="editLessonContent" required></textarea>
+                    <textarea id="editLessonContent" placeholder="Just write!" required></textarea>
                 </div>
                 <button type="submit">Save Changes</button>
-            </form>
-            <form id="deleteLessonForm">
-                <button type="button" id="deleteLessonButton">Delete</button>
             </form>
         </div>
     </div>
@@ -68,6 +69,6 @@
     </script>
 
     <!-- Lesson Logic -->
-    <script type="module" src="../js/database.js"></script>
+    <script type="module" src="../js/lessons.js"></script>
 </body>
 </html>

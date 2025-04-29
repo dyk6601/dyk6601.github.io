@@ -24,17 +24,10 @@
 <div class="centered">
   <span id="dailyPercentage">0.01% a day</span>
 </div>
-<div class = "type_container">
-  <input type = "text" class = "type_bar" placeholder= "Feel free to write anything">
-</div>
+
   <form id="lessonForm">
     <div class="form-group">
-      <label for="lessonTitle">Lesson Title:</label>
-      <input type="text" id="lessonTitle" name="lessonTitle" required>
-    </div>
-    <div class="form-group">
-      <label for="lessonContent">Lesson Content:</label>
-      <textarea id="lessonContent" name="lessonContent" required></textarea>
+      <textarea id="lessonContent" name="lessonContent" placeholder="Just write!" required></textarea>
     </div>
     <button type="submit" id="submitButton">Add Lesson</button>
     <div id="loadingIndicator" style="display: none;">Loading...</div>

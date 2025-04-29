@@ -114,7 +114,7 @@ function updateDailyPercentage() {
 }
 
 // Function to add a new lesson
-async function addLesson(title, content) {
+async function addLesson(content) {
     try {
         const { user, error: authError } = await checkAuth();
         if (authError || !user) {
@@ -126,16 +126,13 @@ async function addLesson(title, content) {
         showLoading(loadingIndicator);
         submitButton.disabled = true;
 
-        // No need to generate an ID manually - let the database handle it
         const { data, error } = await supabase
             .from('lessons')
             .insert([
                 { 
-                    // Don't include id here - let Supabase use the default gen_random_uuid()
-                    title: title, 
                     content: content,
                     created_at: new Date().toISOString(),
-                    user_id: user.id // This comes from the authenticated user
+                    user_id: user.id
                 }
             ]);
 
@@ -156,7 +153,7 @@ async function addLesson(title, content) {
 }
 
 // Function to edit a lesson
-async function editLesson(id, title, content) {
+async function editLesson(id, content) {
     try {
         const { user, error: authError } = await checkAuth();
         if (authError || !user) {
@@ -181,9 +178,9 @@ async function editLesson(id, title, content) {
 
         const { error } = await supabase
             .from('lessons')
-            .update({ title, content })
+            .update({ content })
             .eq('id', id)
-            .eq('user_id', user.id); // Additional check to ensure user can only update their own lessons
+            .eq('user_id', user.id);
 
         if (error) throw error;
 
@@ -285,7 +282,6 @@ async function loadLessons() {
                 const lesson = lessons.find(l => l.id === id);
                 if (lesson) {
                     document.getElementById('editLessonId').value = id;
-                    document.getElementById('editLessonTitle').value = lesson.title;
                     document.getElementById('editLessonContent').value = lesson.content;
                     showModal();
                 }
@@ -417,9 +413,8 @@ if (signupForm) {
 if (lessonForm) {
     lessonForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const title = document.getElementById('lessonTitle').value;
         const content = document.getElementById('lessonContent').value;
-        await addLesson(title, content);
+        await addLesson(content);
     });
 }
 
@@ -428,9 +423,8 @@ if (editLessonForm) {
     editLessonForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('editLessonId').value;
-        const title = document.getElementById('editLessonTitle').value;
         const content = document.getElementById('editLessonContent').value;
-        await editLesson(id, title, content);
+        await editLesson(id, content);
     });
 }
 

@@ -36,6 +36,13 @@ body {
     margin: 0;
   }
 
+  #dailyPercentage {
+    color: rgb(39, 37, 35);
+    font-size: 1.8em; 
+    font-weight: bold; 
+    font-style: italic; 
+  }
+
   .type_container{
     display: flex;
     justify-content: center; 
@@ -50,7 +57,8 @@ body {
     border-radius: 6px;
     border: 1px solid #ccc;
   }
-  * Lesson Form Styles */
+
+
 .lesson-form {
     max-width: 600px;
     margin: 20px auto;

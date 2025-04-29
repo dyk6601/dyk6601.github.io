@@ -62,6 +62,13 @@ window.addEventListener('click', (event) => {
     }
 });
 
+// Close modal when pressing ESC key
+window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && editModal.style.display === 'block') {
+        hideModal();
+    }
+});
+
 // Function to animate percentage change
 function animatePercentageChange(startValue, endValue, element, duration = 1500) {
     const startTime = performance.now();
@@ -254,54 +261,33 @@ async function loadLessons() {
         const { data: lessons, error } = await supabase
             .from('lessons')
             .select('*')
-            .eq('user_id', user.id) // Only fetch lessons belonging to current user
+            .eq('user_id', user.id)
             .order('created_at', { ascending: false });
 
         if (error) throw error;
 
         lessonsContainer.innerHTML = '';
-        if (lessons.length === 0) {
-            lessonsContainer.innerHTML = '<p>No lessons yet. Be the first to add one!</p>';
-            return;
-        }
-
         lessons.forEach(lesson => {
             const lessonElement = document.createElement('div');
             lessonElement.className = 'lesson-box';
             lessonElement.innerHTML = `
-                <h2>${lesson.title}</h2>
                 <p>${lesson.content}</p>
                 <div class="lesson-date">${new Date(lesson.created_at).toLocaleDateString()}</div>
             `;
+            
+            // Add click event to open modal
+            lessonElement.addEventListener('click', () => {
+                document.getElementById('editLessonId').value = lesson.id;
+                document.getElementById('editLessonContent').value = lesson.content;
+                document.querySelector('.lesson-date-display').textContent = `${new Date(lesson.created_at).toLocaleDateString()}`;
+                showModal();
+            });
+            
             lessonsContainer.appendChild(lessonElement);
-        });
-
-        // Add event listeners for edit and delete buttons
-        document.querySelectorAll('.edit-button').forEach(button => {
-            button.addEventListener('click', async (e) => {
-                const id = e.target.dataset.id;
-                const lesson = lessons.find(l => l.id === id);
-                if (lesson) {
-                    document.getElementById('editLessonId').value = id;
-                    document.getElementById('editLessonTitle').value = lesson.title;
-                    document.getElementById('editLessonContent').value = lesson.content;
-                    showModal();
-                }
-            });
-        });
-
-        document.querySelectorAll('.delete-button').forEach(button => {
-            button.addEventListener('click', async (e) => {
-                const id = e.target.dataset.id;
-                await deleteLesson(id);
-            });
         });
     } catch (error) {
         console.error('Error loading lessons: ', error);
-        const lessonsContainer = document.querySelector('.lesson-container');
-        if (lessonsContainer) {
-            lessonsContainer.innerHTML = '<p>Error loading lessons. Please try refreshing the page.</p>';
-        }
+        alert('Error loading lessons. Please try again.');
     } finally {
         hideLoading(loadingLessons);
     }
@@ -426,11 +412,42 @@ if (editLessonForm) {
     editLessonForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('editLessonId').value;
-        const title = document.getElementById('editLessonTitle').value;
         const content = document.getElementById('editLessonContent').value;
-        await editLesson(id, title, content);
+        await editLesson(id, content);
     });
 }
+
+// Add event listener for delete button
+if (deleteLessonForm) {
+    deleteLessonForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('editLessonId').value;
+        await deleteLesson(id);
+        hideModal();
+    });
+}
+
+// Add event listener for delete option in dropdown
+document.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('delete-option')) {
+        const id = document.getElementById('editLessonId').value;
+        await deleteLesson(id);
+        hideModal();
+    }
+});
+
+// Toggle dropdown menu
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('more-options')) {
+        const dropdown = document.querySelector('.dropdown-content');
+        dropdown.classList.toggle('show');
+    } else if (!e.target.closest('.dropdown')) {
+        const dropdown = document.querySelector('.dropdown-content');
+        if (dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    }
+});
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
