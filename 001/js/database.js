@@ -110,7 +110,7 @@ function updateDailyPercentage() {
 }
 
 // Function to add a new lesson
-async function addLesson(content, category) {
+async function addLesson(content, category = "") {
     try {
         const { user, error: authError } = await checkAuth();
         if (authError || !user) {
@@ -122,15 +122,12 @@ async function addLesson(content, category) {
         showLoading(loadingIndicator);
         submitButton.disabled = true;
 
-        // Make category optional and default to empty string
-        const safeCategory = category ? category : "";
-
         const { data, error } = await supabase
             .from('lessons')
             .insert([
                 { 
                     content: content,
-                    category: safeCategory,
+                    category: category,
                     created_at: new Date().toISOString(),
                     user_id: user.id
                 }
@@ -167,7 +164,7 @@ async function addLesson(content, category) {
 }
 
 // Function to edit a lesson
-async function editLesson(id, content, category) {
+async function editLesson(id, content, category = "") {
     try {
         const { user, error: authError } = await checkAuth();
         if (authError || !user) {
@@ -190,12 +187,9 @@ async function editLesson(id, content, category) {
             return;
         }
 
-        // Make category optional and default to empty string
-        const safeCategory = category ? category : "";
-
         const { error } = await supabase
             .from('lessons')
-            .update({ content, category: safeCategory })
+            .update({ content, category })
             .eq('id', id)
             .eq('user_id', user.id);
 

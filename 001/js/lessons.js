@@ -529,7 +529,7 @@ if (lessonForm) {
     lessonForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const content = document.getElementById('lessonContent').value;
-        const category = document.getElementById('lessonCategory').value;
+        const category = document.getElementById('lessonCategory').value || "";
         await addLesson(content, category);
     });
 }
@@ -540,7 +540,7 @@ if (editLessonForm) {
         e.preventDefault();
         const id = document.getElementById('editLessonId').value;
         const content = document.getElementById('editLessonContent').value;
-        const category = document.getElementById('editLessonCategory').value;
+        const category = document.getElementById('editLessonCategory').value || "";
         await editLesson(id, content, category);
     });
 }
