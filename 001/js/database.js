@@ -17,6 +17,28 @@ const lessonSection = document.getElementById('lessonSection');
 const loginForm = document.getElementById('loginForm');
 const logoutButton = document.getElementById('logoutButton');
 
+// Initialize emoji picker for add form
+const emojiPickerBtn = document.getElementById('emojiPickerBtn');
+const lessonCategoryInput = document.getElementById('lessonCategory');
+let emojiPicker = null;
+
+if (emojiPickerBtn && lessonCategoryInput) {
+    emojiPickerBtn.addEventListener('click', () => {
+        if (!emojiPicker) {
+            emojiPicker = document.createElement('emoji-picker');
+            document.body.appendChild(emojiPicker);
+            emojiPicker.addEventListener('emoji-click', event => {
+                lessonCategoryInput.value += event.detail.unicode;
+                emojiPicker.remove();
+                emojiPicker = null;
+            });
+        } else {
+            emojiPicker.remove();
+            emojiPicker = null;
+        }
+    });
+}
+
 // Function to check if user is authenticated
 async function checkAuth() {
     const { data: { user }, error } = await supabase.auth.getUser();
@@ -88,7 +110,7 @@ function updateDailyPercentage() {
 }
 
 // Function to add a new lesson
-async function addLesson(content) {
+async function addLesson(content, category) {
     try {
         const { user, error: authError } = await checkAuth();
         if (authError || !user) {
@@ -100,11 +122,15 @@ async function addLesson(content) {
         showLoading(loadingIndicator);
         submitButton.disabled = true;
 
+        // Make category optional and default to empty string
+        const safeCategory = category ? category : "";
+
         const { data, error } = await supabase
             .from('lessons')
             .insert([
                 { 
                     content: content,
+                    category: safeCategory,
                     created_at: new Date().toISOString(),
                     user_id: user.id
                 }
@@ -141,7 +167,7 @@ async function addLesson(content) {
 }
 
 // Function to edit a lesson
-async function editLesson(id, content) {
+async function editLesson(id, content, category) {
     try {
         const { user, error: authError } = await checkAuth();
         if (authError || !user) {
@@ -164,9 +190,12 @@ async function editLesson(id, content) {
             return;
         }
 
+        // Make category optional and default to empty string
+        const safeCategory = category ? category : "";
+
         const { error } = await supabase
             .from('lessons')
-            .update({ content })
+            .update({ content, category: safeCategory })
             .eq('id', id)
             .eq('user_id', user.id);
 
@@ -271,6 +300,7 @@ async function loadLessons() {
                 if (lesson) {
                     document.getElementById('editLessonId').value = id;
                     document.getElementById('editLessonContent').value = lesson.content;
+                    document.getElementById('editLessonCategory').value = lesson.category;
                     showModal();
                 }
             });
@@ -432,7 +462,8 @@ if (lessonForm) {
     lessonForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const content = document.getElementById('lessonContent').value;
-        await addLesson(content);
+        const category = document.getElementById('lessonCategory').value;
+        await addLesson(content, category);
     });
 }
 
@@ -442,7 +473,8 @@ if (editLessonForm) {
         e.preventDefault();
         const id = document.getElementById('editLessonId').value;
         const content = document.getElementById('editLessonContent').value;
-        await editLesson(id, content);
+        const category = document.getElementById('editLessonCategory').value;
+        await editLesson(id, content, category);
     });
 }
 

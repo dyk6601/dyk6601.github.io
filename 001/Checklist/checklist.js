@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="add-item-to-goal">
                     <div class="new-item-checkbox-container">
                         <input type="checkbox" disabled>
-                        <input type="text" class="new-item-for-goal" placeholder="Add a new task...">
+                        <input type="text" class="new-item-for-goal" placeholder="Add a new task">
                     </div>
                 </div>
             </div>

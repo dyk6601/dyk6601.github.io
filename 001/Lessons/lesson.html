@@ -6,6 +6,8 @@
     <title>Lessons - 0.01% a day</title>
     <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="lessons.css" />
+    <!-- Emoji Picker -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/index.js"></script>
 </head>
 <body>
     <nav class="nav">
@@ -25,6 +27,12 @@
     <div class="main-content">
         <div class="lesson">
             <h1>Lessons</h1>
+
+            <!-- Category Filter Section -->
+            <div class="category-filter">
+                <button class="category-btn active" data-category="all">All</button>
+                <!-- Category buttons will be dynamically added here -->
+            </div>
 
             <!-- Login message for non-authenticated users -->
             <div id="loginSection" class="login-message" style="display: none;">
@@ -54,6 +62,11 @@
                     <input type="hidden" id="editLessonId" />
                     <div class="form-group">
                         <textarea id="editLessonContent" placeholder="Just write!" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLessonCategory">Category:</label>
+                        <input type="text" id="editLessonCategory" name="editLessonCategory" placeholder="Enter category" required />
+                        <button type="button" id="editEmojiPickerBtn">😊</button>
                     </div>
                     <button type="submit">Save Changes</button>
                 </form>

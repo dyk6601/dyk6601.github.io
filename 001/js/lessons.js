@@ -17,6 +17,56 @@ const lessonSection = document.getElementById('lessonSection');
 const loginForm = document.getElementById('loginForm');
 const logoutButton = document.getElementById('logoutButton');
 
+// Initialize emoji picker for add form
+const emojiPickerBtn = document.getElementById('emojiPickerBtn');
+const lessonCategoryInput = document.getElementById('lessonCategory');
+let emojiPicker = null;
+
+if (emojiPickerBtn && lessonCategoryInput) {
+    emojiPickerBtn.addEventListener('click', () => {
+        if (!emojiPicker) {
+            emojiPicker = document.createElement('emoji-picker');
+            document.body.appendChild(emojiPicker);
+            emojiPicker.addEventListener('emoji-click', event => {
+                lessonCategoryInput.value += event.detail.unicode;
+                emojiPicker.remove();
+                emojiPicker = null;
+            });
+        } else {
+            emojiPicker.remove();
+            emojiPicker = null;
+        }
+    });
+}
+
+// Initialize emoji picker for edit form
+const editEmojiPickerBtn = document.getElementById('editEmojiPickerBtn');
+const editLessonCategoryInput = document.getElementById('editLessonCategory');
+let editEmojiPicker = null;
+
+if (editEmojiPickerBtn && editLessonCategoryInput) {
+    editEmojiPickerBtn.addEventListener('click', () => {
+        if (!editEmojiPicker) {
+            editEmojiPicker = document.createElement('emoji-picker');
+            // Position the emoji picker relative to the button
+            const buttonRect = editEmojiPickerBtn.getBoundingClientRect();
+            editEmojiPicker.style.position = 'absolute';
+            editEmojiPicker.style.top = `${buttonRect.bottom + window.scrollY}px`;
+            editEmojiPicker.style.left = `${buttonRect.left + window.scrollX}px`;
+            editEmojiPicker.style.zIndex = '1000';
+            document.body.appendChild(editEmojiPicker);
+            editEmojiPicker.addEventListener('emoji-click', event => {
+                editLessonCategoryInput.value += event.detail.unicode;
+                editEmojiPicker.remove();
+                editEmojiPicker = null;
+            });
+        } else {
+            editEmojiPicker.remove();
+            editEmojiPicker = null;
+        }
+    });
+}
+
 // Function to check if user is authenticated
 async function checkAuth() {
     const { data: { user }, error } = await supabase.auth.getUser();
@@ -121,7 +171,7 @@ function updateDailyPercentage() {
 }
 
 // Function to add a new lesson
-async function addLesson(title, content) {
+async function addLesson(content, category) {
     try {
         const { user, error: authError } = await checkAuth();
         if (authError || !user) {
@@ -137,10 +187,10 @@ async function addLesson(title, content) {
             .from('lessons')
             .insert([
                 { 
-                    title: title, 
                     content: content,
+                    category: category,
                     created_at: new Date().toISOString(),
-                    user_id: user.id // Add user ID to associate lessons with specific users
+                    user_id: user.id
                 }
             ]);
 
@@ -161,7 +211,7 @@ async function addLesson(title, content) {
 }
 
 // Function to edit a lesson
-async function editLesson(id, content) {
+async function editLesson(id, content, category) {
     try {
         const { user, error: authError } = await checkAuth();
         if (authError || !user) {
@@ -186,7 +236,7 @@ async function editLesson(id, content) {
 
         const { error } = await supabase
             .from('lessons')
-            .update({ content })
+            .update({ content, category })
             .eq('id', id)
             .eq('user_id', user.id);
 
@@ -267,33 +317,107 @@ async function loadLessons() {
 
         if (error) throw error;
 
-        lessonsContainer.innerHTML = '';
-        lessons.forEach(lesson => {
-            const lessonElement = document.createElement('div');
-            lessonElement.className = 'lesson-box';
-            const date = new Date(lesson.created_at);
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            lessonElement.innerHTML = `
-                <p>${lesson.content}</p>
-                <div class="lesson-date">${date.toLocaleDateString('en-US', options)}</div>
-            `;
-            
-            // Add click event to open modal
-            lessonElement.addEventListener('click', () => {
-                document.getElementById('editLessonId').value = lesson.id;
-                document.getElementById('editLessonContent').value = lesson.content;
-                document.querySelector('.lesson-date-display').textContent = `${date.toLocaleDateString('en-US', options)}`;
-                showModal();
-            });
-            
-            lessonsContainer.appendChild(lessonElement);
-        });
+        // Update category filter buttons
+        updateCategoryFilters(lessons);
+
+        // Store lessons in a global variable for filtering
+        window.allLessons = lessons;
+
+        // Display all lessons initially
+        displayFilteredLessons('all');
+
     } catch (error) {
         console.error('Error loading lessons: ', error);
         alert('Error loading lessons. Please try again.');
     } finally {
         hideLoading(loadingLessons);
     }
+}
+
+// Function to update category filter buttons
+function updateCategoryFilters(lessons) {
+    const categoryFilter = document.querySelector('.category-filter');
+    if (!categoryFilter) return;
+
+    // Count category occurrences
+    const categoryCounts = lessons.reduce((acc, lesson) => {
+        if (lesson.category) {
+            acc[lesson.category] = (acc[lesson.category] || 0) + 1;
+        }
+        return acc;
+    }, {});
+
+    // Convert to array and sort by count
+    const sortedCategories = Object.entries(categoryCounts)
+        .sort(([, countA], [, countB]) => countB - countA)
+        .slice(0, 10)  // Take only top 10
+        .map(([category]) => category);
+
+    // Keep the "All" button
+    categoryFilter.innerHTML = '<button class="category-btn active" data-category="all">All</button>';
+
+    // Add buttons for each category
+    sortedCategories.forEach(category => {
+        const button = document.createElement('button');
+        button.className = 'category-btn';
+        button.dataset.category = category;
+        button.textContent = category;
+        categoryFilter.appendChild(button);
+    });
+
+    // Add click event listeners to category buttons
+    categoryFilter.addEventListener('click', (e) => {
+        if (e.target.classList.contains('category-btn')) {
+            // Remove active class from all buttons
+            categoryFilter.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Add active class to clicked button
+            e.target.classList.add('active');
+            // Filter lessons
+            displayFilteredLessons(e.target.dataset.category);
+        }
+    });
+}
+
+// Function to display filtered lessons
+function displayFilteredLessons(category) {
+    const lessonsContainer = document.querySelector('.lesson-container');
+    if (!lessonsContainer || !window.allLessons) return;
+
+    const filteredLessons = category === 'all' 
+        ? window.allLessons 
+        : window.allLessons.filter(lesson => lesson.category === category);
+
+    lessonsContainer.innerHTML = '';
+    
+    if (filteredLessons.length === 0) {
+        lessonsContainer.innerHTML = '<p>No lessons found in this category.</p>';
+        return;
+    }
+
+    filteredLessons.forEach(lesson => {
+        const lessonElement = document.createElement('div');
+        lessonElement.className = 'lesson-box';
+        const date = new Date(lesson.created_at);
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        lessonElement.innerHTML = `
+            <p>${lesson.content}</p>
+            <div class="lesson-category"><span>${lesson.category}</span></div>
+            <div class="lesson-date">${date.toLocaleDateString('en-US', options)}</div>
+        `;
+        
+        // Add click event to open modal
+        lessonElement.addEventListener('click', () => {
+            document.getElementById('editLessonId').value = lesson.id;
+            document.getElementById('editLessonContent').value = lesson.content;
+            document.getElementById('editLessonCategory').value = lesson.category;
+            document.querySelector('.lesson-date-display').textContent = `${date.toLocaleDateString('en-US', options)}`;
+            showModal();
+        });
+        
+        lessonsContainer.appendChild(lessonElement);
+    });
 }
 
 // Function to show login UI and hide lesson UI
@@ -404,9 +528,9 @@ if (signupForm) {
 if (lessonForm) {
     lessonForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const title = document.getElementById('lessonTitle').value;
         const content = document.getElementById('lessonContent').value;
-        await addLesson(title, content);
+        const category = document.getElementById('lessonCategory').value;
+        await addLesson(content, category);
     });
 }
 
@@ -416,7 +540,8 @@ if (editLessonForm) {
         e.preventDefault();
         const id = document.getElementById('editLessonId').value;
         const content = document.getElementById('editLessonContent').value;
-        await editLesson(id, content);
+        const category = document.getElementById('editLessonCategory').value;
+        await editLesson(id, content, category);
     });
 }
 
